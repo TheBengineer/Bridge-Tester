@@ -1,0 +1,17 @@
+Vertical beams = 73.5" x2 1/8in thick 3x3 steel tubing
+
+Horizontal beam = 57" 1/8in thick 3x6 steel tubing
+
+trusses = 30" x6 1/8in thick 2x2 steel tubing
+
+base feet = 30' x2 1/8in thick 3x3 steel tubing
+
+bottom + top beams = 63" x2 1/8in thick 3x3 steel tubing
+
+30 + 30 + 63 + 63 + 73.5 + 73.5 = 30' of 3x3in steel
+
+57 3x6 = 5' of 3x6in steel
+
+16' of 2x2in steel
+
+30' of 2x2in steel for gussets and top truss
