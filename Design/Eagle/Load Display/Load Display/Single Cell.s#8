@@ -4531,8 +4531,8 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <part name="R5" library="Ben-rcl" deviceset="R-US_" device="0207/10"/>
 <part name="R6" library="Ben-rcl" deviceset="R-US_" device="0207/10"/>
 <part name="R7" library="Ben-rcl" deviceset="R-US_" device="0207/10"/>
-<part name="POWER" library="Ben-SF-Con" deviceset="M02" device="5MM"/>
-<part name="I2C" library="Ben-SF-Con" deviceset="M02" device="5MM"/>
+<part name="JP1" library="Ben-SF-Con" deviceset="M02" device="5MM"/>
+<part name="JP2" library="Ben-SF-Con" deviceset="M02" device="5MM"/>
 </parts>
 <sheets>
 <sheet>
@@ -4548,8 +4548,8 @@ will be further integrated into the Sparkfun Library for other footprints.  It c
 <instance part="R5" gate="G$1" x="68.58" y="68.58" rot="R90"/>
 <instance part="R6" gate="G$1" x="71.12" y="68.58" rot="R90"/>
 <instance part="R7" gate="G$1" x="73.66" y="68.58" rot="R90"/>
-<instance part="POWER" gate="G$1" x="15.24" y="93.98"/>
-<instance part="I2C" gate="G$1" x="129.54" y="20.32" rot="R180"/>
+<instance part="JP1" gate="G$1" x="15.24" y="93.98"/>
+<instance part="JP2" gate="G$1" x="129.54" y="20.32" rot="R180"/>
 </instances>
 <busses>
 </busses>
