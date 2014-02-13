@@ -8,3 +8,5 @@
 \\vtcfiles\shared\ELM\ELM4701\Bridge Tester\Design\Solidworks Models\Frame Optimization REV 2\Main Frame-Bridge
 \\vtcfiles\shared\ELM\ELM4701\Bridge Tester\Design\Solidworks Models\Frame Optimization REV 2\Main Frame-Bridge
 \\vtcfiles\shared\ELM\ELM4701\Bridge Tester\Design\Solidworks Models\Frame Optimization REV 2\Main Frame-Center Load
+Q:\Design\Solidworks Models\Frame Optimization REV 2\Main Frame-Study 1
+Q:\Design\Solidworks Models\Frame Optimization REV 2\Main Frame-Study 1
