@@ -1,4 +1,3 @@
-
 /*************************************************** 
   This is a library for our I2C LED Backpacks
 
@@ -38,16 +37,10 @@ void setup() {
 void loop() {
   // paint one LED per row. The HT16K33 internal memory looks like
   // a 8x16 bit matrix (8 rows, 16 columns)
-  Serial.print(counter);
-  Serial.print(" ");
-  Serial.println(counter%2);
   for (uint8_t i=0; i<8; i++) {
     // draw a diagonal row of pixels
-    //matrix.displaybuffer[i] = _BV((counter+i) % 16) | _BV((counter+i+8) % 16)  ;
-    matrix.displaybuffer[i] = 1<<counter  ;
-
+    matrix.displaybuffer[i] = _BV((counter+i) % 16) | _BV((counter+i+8) % 16)  ;
   }
-  //Serial.println(matrix.displaybuffer);
   // write the changes we just made to the display
   matrix.writeDisplay();
   delay(100);
@@ -55,4 +48,3 @@ void loop() {
   counter++;
   if (counter >= 16) counter = 0;  
 }
-

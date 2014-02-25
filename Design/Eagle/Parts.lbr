@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.2">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -57,20 +57,20 @@
 <library>
 <packages>
 <package name="4&quot;">
-<pad name="P4" x="15.24" y="0" drill="0.8" shape="square"/>
-<pad name="P1" x="0" y="0" drill="0.8" shape="square"/>
-<pad name="P5" x="20.32" y="0" drill="0.8" shape="square"/>
-<pad name="P2" x="5.08" y="0" drill="0.8" shape="square"/>
-<pad name="P3" x="10.16" y="0" drill="0.8" shape="square" rot="R180"/>
-<pad name="P10" x="0" y="106.934" drill="0.8" shape="square"/>
-<pad name="P9" x="5.08" y="106.934" drill="0.8" shape="square"/>
-<pad name="P8" x="10.16" y="106.934" drill="0.8" shape="square"/>
-<pad name="P7" x="15.24" y="106.934" drill="0.8" shape="square"/>
-<pad name="P6" x="20.32" y="106.934" drill="0.8" shape="square"/>
-<wire x1="-34.925" y1="-7.62" x2="-34.925" y2="114.3" width="0.127" layer="21"/>
-<wire x1="-34.925" y1="-7.62" x2="60.325" y2="-7.62" width="0.127" layer="21"/>
-<wire x1="60.325" y1="-7.62" x2="60.325" y2="114.3" width="0.127" layer="21"/>
-<wire x1="60.325" y1="114.3" x2="-34.925" y2="114.3" width="0.127" layer="21"/>
+<pad name="P4" x="15.24" y="0" drill="0.8" diameter="3.81" shape="square"/>
+<pad name="P1" x="0" y="0" drill="0.8" diameter="3.81" shape="square"/>
+<pad name="P5" x="20.32" y="0" drill="0.8" diameter="3.81" shape="square"/>
+<pad name="P2" x="5.08" y="0" drill="0.8" diameter="3.81" shape="square"/>
+<pad name="P3" x="10.16" y="0" drill="0.8" diameter="3.81" shape="square" rot="R180"/>
+<pad name="P10" x="0" y="5.334" drill="0.8" diameter="3.81" shape="square"/>
+<pad name="P9" x="5.08" y="5.334" drill="0.8" diameter="3.81" shape="square"/>
+<pad name="P8" x="10.16" y="5.334" drill="0.8" diameter="3.81" shape="square"/>
+<pad name="P7" x="15.24" y="5.334" drill="0.8" diameter="3.81" shape="square"/>
+<pad name="P6" x="20.32" y="5.334" drill="0.8" diameter="3.81" shape="square"/>
+<wire x1="-4.445" y1="-3.81" x2="-4.445" y2="8.89" width="0.127" layer="21"/>
+<wire x1="-4.445" y1="-3.81" x2="24.765" y2="-3.81" width="0.127" layer="21"/>
+<wire x1="24.765" y1="-3.81" x2="24.765" y2="8.89" width="0.127" layer="21"/>
+<wire x1="24.765" y1="8.89" x2="-4.445" y2="8.89" width="0.127" layer="21"/>
 </package>
 <package name="HDSP-I">
 <description>&lt;b&gt;LED DISPLAY&lt;/b&gt;&lt;p&gt;
@@ -211,6 +211,46 @@
 <wire x1="7.62" y1="-2.54" x2="-2.54" y2="-2.54" width="0.127" layer="21"/>
 <wire x1="-2.54" y1="-2.54" x2="-2.54" y2="2.54" width="0.127" layer="21"/>
 </package>
+<package name="BREAKOUT">
+<wire x1="-11.43" y1="3.81" x2="16.51" y2="3.81" width="0.127" layer="21"/>
+<wire x1="16.51" y1="3.81" x2="16.51" y2="-8.89" width="0.127" layer="21"/>
+<wire x1="16.51" y1="-8.89" x2="-11.43" y2="-8.89" width="0.127" layer="21"/>
+<wire x1="-11.43" y1="-8.89" x2="-11.43" y2="3.81" width="0.127" layer="21"/>
+<pad name="P$1" x="-7.62" y="1.27" drill="0.8" diameter="3.81" shape="square" rot="R90"/>
+<pad name="P$2" x="-2.54" y="1.27" drill="0.8" diameter="3.81" shape="square" rot="R90"/>
+<pad name="P$3" x="2.54" y="1.27" drill="0.8" diameter="3.81" shape="square" rot="R90"/>
+<pad name="P$4" x="7.62" y="1.27" drill="0.8" diameter="3.81" shape="square" rot="R90"/>
+<pad name="P$5" x="12.7" y="1.27" drill="0.8" diameter="3.81" shape="square" rot="R90"/>
+<pad name="P$6" x="12.7" y="-6.35" drill="0.8" diameter="3.81" shape="square" rot="R90"/>
+<pad name="P$7" x="7.62" y="-6.35" drill="0.8" diameter="3.81" shape="square" rot="R90"/>
+<pad name="P$8" x="2.54" y="-6.35" drill="0.8" diameter="3.81" shape="square" rot="R90"/>
+<pad name="P$9" x="-2.54" y="-6.35" drill="0.8" diameter="3.81" shape="square" rot="R90"/>
+<pad name="P$10" x="-7.62" y="-6.35" drill="0.8" diameter="3.81" shape="square" rot="R90"/>
+</package>
+<package name="4INTESTER">
+<pad name="1" x="0" y="0" drill="1.1" diameter="1.778"/>
+<pad name="GND5" x="2.54" y="0" drill="1.1" diameter="1.778"/>
+<pad name="2" x="5.08" y="0" drill="1.1" diameter="1.778"/>
+<pad name="GND6" x="7.62" y="0" drill="1.1" diameter="1.778"/>
+<pad name="3" x="10.16" y="0" drill="1.1" diameter="1.778"/>
+<pad name="GND7" x="12.7" y="0" drill="1.1" diameter="1.778"/>
+<pad name="4" x="15.24" y="0" drill="1.1" diameter="1.778"/>
+<pad name="GND8" x="17.78" y="0" drill="1.1" diameter="1.778"/>
+<pad name="5" x="20.32" y="0" drill="1.1" diameter="1.778"/>
+<pad name="10" x="0" y="76.2" drill="1.1" diameter="1.778"/>
+<pad name="GND" x="2.54" y="76.2" drill="1.1" diameter="1.778"/>
+<pad name="9" x="5.08" y="76.2" drill="1.1" diameter="1.778"/>
+<pad name="GND2" x="7.62" y="76.2" drill="1.1" diameter="1.778"/>
+<pad name="8" x="10.16" y="76.2" drill="1.1" diameter="1.778"/>
+<pad name="GND3" x="12.7" y="76.2" drill="1.1" diameter="1.778"/>
+<pad name="7" x="15.24" y="76.2" drill="1.1" diameter="1.778"/>
+<pad name="GND4" x="17.78" y="76.2" drill="1.1" diameter="1.778"/>
+<pad name="6" x="20.32" y="76.2" drill="1.1" diameter="1.778"/>
+<wire x1="-2.54" y1="81.28" x2="24.13" y2="81.28" width="0.127" layer="21"/>
+<wire x1="24.13" y1="81.28" x2="24.13" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="24.13" y1="-2.54" x2="-2.54" y2="-2.54" width="0.127" layer="21"/>
+<wire x1="-2.54" y1="-2.54" x2="-2.54" y2="81.28" width="0.127" layer="21"/>
+</package>
 </packages>
 <symbols>
 <symbol name="HD7-A">
@@ -345,6 +385,22 @@
 <pin name="GND" x="0" y="-15.24" length="middle" rot="R90"/>
 <pin name="VOUT" x="12.7" y="0" length="middle" rot="R180"/>
 </symbol>
+<symbol name="BREAKOUT">
+<pin name="P2" x="-5.08" y="-2.54" length="middle"/>
+<pin name="P3" x="-5.08" y="2.54" length="middle"/>
+<pin name="P4" x="-5.08" y="7.62" length="middle"/>
+<pin name="P5" x="-5.08" y="12.7" length="middle"/>
+<pin name="P6" x="17.78" y="12.7" length="middle" rot="R180"/>
+<pin name="P7" x="17.78" y="7.62" length="middle" rot="R180"/>
+<pin name="P8" x="17.78" y="2.54" length="middle" rot="R180"/>
+<pin name="P9" x="17.78" y="-2.54" length="middle" rot="R180"/>
+<pin name="P1" x="-5.08" y="-7.62" length="middle"/>
+<pin name="P10" x="17.78" y="-7.62" length="middle" rot="R180"/>
+<wire x1="0" y1="12.7" x2="0" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="0" y1="-7.62" x2="12.7" y2="-7.62" width="0.254" layer="94"/>
+<wire x1="12.7" y1="-7.62" x2="12.7" y2="12.7" width="0.254" layer="94"/>
+<wire x1="12.7" y1="12.7" x2="0" y2="12.7" width="0.254" layer="94"/>
+</symbol>
 </symbols>
 <devicesets>
 <deviceset name="HD-E101" prefix="DIS">
@@ -388,6 +444,23 @@
 <connect gate="A" pin="E" pad="P1"/>
 <connect gate="A" pin="F" pad="P9"/>
 <connect gate="A" pin="G" pad="P10"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+<device name="BIG" package="4INTESTER">
+<connects>
+<connect gate="A" pin="A" pad="7"/>
+<connect gate="A" pin="B" pad="6"/>
+<connect gate="A" pin="C" pad="4"/>
+<connect gate="A" pin="CA" pad="3"/>
+<connect gate="A" pin="CA@1" pad="8"/>
+<connect gate="A" pin="D" pad="2"/>
+<connect gate="A" pin="DP" pad="5"/>
+<connect gate="A" pin="E" pad="1"/>
+<connect gate="A" pin="F" pad="9"/>
+<connect gate="A" pin="G" pad="10"/>
 </connects>
 <technologies>
 <technology name=""/>
@@ -464,6 +537,30 @@
 <connect gate="G$1" pin="GND" pad="P$2"/>
 <connect gate="G$1" pin="VCC" pad="P$1"/>
 <connect gate="G$1" pin="VOUT" pad="P$3"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="BREAKOUT">
+<gates>
+<gate name="G$1" symbol="BREAKOUT" x="-15.24" y="7.62"/>
+</gates>
+<devices>
+<device name="BREAKOUT" package="4&quot;">
+<connects>
+<connect gate="G$1" pin="P1" pad="P1"/>
+<connect gate="G$1" pin="P10" pad="P10"/>
+<connect gate="G$1" pin="P2" pad="P2"/>
+<connect gate="G$1" pin="P3" pad="P3"/>
+<connect gate="G$1" pin="P4" pad="P4"/>
+<connect gate="G$1" pin="P5" pad="P5"/>
+<connect gate="G$1" pin="P6" pad="P6"/>
+<connect gate="G$1" pin="P7" pad="P7"/>
+<connect gate="G$1" pin="P8" pad="P8"/>
+<connect gate="G$1" pin="P9" pad="P9"/>
 </connects>
 <technologies>
 <technology name=""/>
