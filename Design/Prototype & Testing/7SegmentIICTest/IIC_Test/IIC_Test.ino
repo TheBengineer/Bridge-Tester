@@ -45,7 +45,7 @@ void loop() {
     // draw a diagonal row of pixels
     //matrix.displaybuffer[i] = _BV((counter+i) % 16) | _BV((counter+i+8) % 16)  ;
     matrix.displaybuffer[i] = 1<<counter  ;
-
+  
   }
   //Serial.println(matrix.displaybuffer);
   // write the changes we just made to the display
