@@ -10,3 +10,12 @@
 \\vtcfiles\shared\ELM\ELM4701\Bridge Tester\Design\Solidworks Models\Frame Optimization REV 2\Main Frame-Center Load
 Q:\Design\Solidworks Models\Frame Optimization REV 2\Main Frame-Study 1
 Q:\Design\Solidworks Models\Frame Optimization REV 2\Main Frame-Study 1
+\\dracolyth\Bridge-Tester\Design\Solidworks Models\Frame Optimization REV 2\Frame Assembled with top-Study 1
+\\dracolyth\Bridge-Tester\Design\Solidworks Models\Frame Optimization REV 2\Frame Assembled with top-Study 1
+\\dracolyth\Bridge-Tester\Design\Solidworks Models\Frame Optimization REV 2\Frame Assembled with top-Study 1
+\\dracolyth\Bridge-Tester\Design\Solidworks Models\Frame Optimization REV 2\Frame Assembled with top-Study 1
+\\dracolyth\Bridge-Tester\Design\Solidworks Models\Frame Optimization REV 2\Frame Assembled with top-Study 1
+\\dracolyth\Bridge-Tester\Design\Solidworks Models\Frame Optimization REV 2\Frame Assembled with top-Study 1
+\\dracolyth\Bridge-Tester\Design\Solidworks Models\Frame Optimization REV 2\Main Frame-Center load
+\\dracolyth\Bridge-Tester\Design\Solidworks Models\Frame Optimization REV 2\Main Frame-Center load
+\\dracolyth\Bridge-Tester\Design\Solidworks Models\Frame Optimization REV 2\Main Frame-Center load
