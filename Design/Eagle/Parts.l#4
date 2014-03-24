@@ -302,21 +302,65 @@
 <pad name="VCCC" x="-7.62" y="-16.51" drill="0.8" shape="square"/>
 <pad name="DRAIN7OUT" x="-5.08" y="7.62" drill="0.8" shape="square"/>
 <pad name="DRAIN6OUT" x="-2.54" y="7.62" drill="0.8" shape="square"/>
-<pad name="DRAIN5OUT" x="0" y="7.62" drill="0.8" shape="square"/>
-<pad name="DRAIN4OUT" x="2.54" y="7.62" drill="0.8" shape="square"/>
-<pad name="GNDOUT2" x="5.08" y="7.62" drill="0.8" shape="square"/>
+<pad name="VCCOUT1" x="0" y="7.62" drill="0.8" shape="square"/>
+<pad name="DRAIN5OUT" x="2.54" y="7.62" drill="0.8" shape="square"/>
+<pad name="DRAIN4OUT" x="5.08" y="7.62" drill="0.8" shape="square"/>
 <pad name="DRAIN0OUT" x="-5.08" y="-20.32" drill="0.8" shape="square"/>
 <pad name="DRAIN1OUT" x="-2.54" y="-20.32" drill="0.8" shape="square"/>
-<pad name="DRAIN2OUT" x="0" y="-20.32" drill="0.8" shape="square"/>
-<pad name="DRAIN3OUT" x="2.54" y="-20.32" drill="0.8" shape="square"/>
-<pad name="GNDOUT" x="5.08" y="-20.32" drill="0.8" shape="square"/>
-<pad name="VCCIN" x="-12.7" y="-13.97" drill="0.8" shape="square"/>
-<pad name="SDAIN" x="-12.7" y="-11.43" drill="0.8" shape="square"/>
-<pad name="A2IN" x="-12.7" y="-8.89" drill="0.8" shape="square"/>
-<pad name="GIN" x="-12.7" y="-6.35" drill="0.8" shape="square"/>
-<pad name="A0IN" x="-12.7" y="-3.81" drill="0.8" shape="square"/>
-<pad name="A1IN" x="-12.7" y="-1.27" drill="0.8" shape="square"/>
-<pad name="GNDIN" x="-12.7" y="1.27" drill="0.8" shape="square"/>
+<pad name="VCCOUT2" x="0" y="-20.32" drill="0.8" shape="square"/>
+<pad name="DRAIN2OUT" x="2.54" y="-20.32" drill="0.8" shape="square"/>
+<pad name="DRAIN3OUT" x="5.08" y="-20.32" drill="0.8" shape="square"/>
+<pad name="12V" x="-12.7" y="-11.43" drill="0.8" shape="square"/>
+<pad name="VCC" x="-12.7" y="-8.89" drill="0.8" shape="square"/>
+<pad name="SDA" x="-12.7" y="-6.35" drill="0.8" shape="square"/>
+<pad name="SCL" x="-12.7" y="-3.81" drill="0.8" shape="square"/>
+<pad name="GND" x="-12.7" y="-1.27" drill="0.8" shape="square"/>
+<rectangle x1="-16.51" y1="-22.86" x2="13.97" y2="8.89" layer="21"/>
+<rectangle x1="6.35" y1="8.89" x2="13.97" y2="10.16" layer="21"/>
+<rectangle x1="-16.51" y1="8.89" x2="6.35" y2="10.16" layer="21"/>
+<rectangle x1="15.24" y1="-22.86" x2="17.78" y2="8.89" layer="21"/>
+<rectangle x1="13.97" y1="-22.86" x2="15.24" y2="10.16" layer="21"/>
+<rectangle x1="15.24" y1="8.89" x2="17.78" y2="10.16" layer="21"/>
+<rectangle x1="-16.51" y1="-26.67" x2="17.78" y2="-22.86" layer="21" rot="R180"/>
+<pad name="SEGPIN3" x="0" y="-30.48" drill="1" shape="square"/>
+<pad name="SEGPIN2" x="5.08" y="-30.48" drill="1" shape="square"/>
+<pad name="SEGPIN1" x="10.16" y="-30.48" drill="1" shape="square"/>
+<pad name="SEGPIN4" x="-5.08" y="-30.48" drill="1" shape="square"/>
+<pad name="SEGPIN5" x="-10.16" y="-30.48" drill="1" shape="square"/>
+<pad name="DRAIN0JUMP" x="-5.08" y="-27.94" drill="0.8" shape="square"/>
+<pad name="DRAIN1JUMP" x="-2.54" y="-27.94" drill="0.8" shape="square"/>
+<pad name="VCCJUMP2" x="0" y="-27.94" drill="0.8" shape="square"/>
+<pad name="DRAIN2JUMP" x="2.54" y="-27.94" drill="0.8" shape="square"/>
+<pad name="DRAIN3JUMP" x="5.08" y="-27.94" drill="0.8" shape="square"/>
+<rectangle x1="-16.51" y1="-29.21" x2="17.78" y2="-26.67" layer="21"/>
+<pad name="DRAIN0RES" x="-5.08" y="-25.4" drill="0.8" shape="square"/>
+<pad name="DRAIN1RES" x="-2.54" y="-25.4" drill="0.8" shape="square"/>
+<pad name="VCCRES2" x="0" y="-25.4" drill="0.8" shape="square"/>
+<pad name="DRAIN2RES" x="2.54" y="-25.4" drill="0.8" shape="square"/>
+<pad name="DRAIN3RES" x="5.08" y="-25.4" drill="0.8" shape="square"/>
+<rectangle x1="-16.51" y1="10.16" x2="17.78" y2="12.7" layer="21"/>
+<pad name="DRAIN7JUMP" x="-5.08" y="12.7" drill="0.8" shape="square"/>
+<pad name="DRAIN6JUMP" x="-2.54" y="12.7" drill="0.8" shape="square"/>
+<pad name="VCCJUMP1" x="0" y="12.7" drill="0.8" shape="square"/>
+<pad name="DRAIN5JUMP" x="2.54" y="12.7" drill="0.8" shape="square"/>
+<pad name="DRAIN4JUMP" x="5.08" y="12.7" drill="0.8" shape="square"/>
+<pad name="GNDX1" x="12.7" y="12.7" drill="0.8" shape="square"/>
+<pad name="VX1" x="15.24" y="12.7" drill="0.8" shape="square"/>
+<pad name="GNDX2" x="12.7" y="10.16" drill="0.8" shape="square"/>
+<pad name="VX2" x="15.24" y="10.16" drill="0.8" shape="square"/>
+<pad name="GNDX3" x="12.7" y="7.62" drill="0.8" shape="square"/>
+<pad name="VX3" x="15.24" y="7.62" drill="0.8" shape="square"/>
+<pad name="GNDNEXT" x="13.97" y="-1.27" drill="0.8" shape="square"/>
+<pad name="SCLNEXT" x="13.97" y="-3.81" drill="0.8" shape="square"/>
+<pad name="SDANEXT" x="13.97" y="-6.35" drill="0.8" shape="square"/>
+<pad name="VCCNEXT" x="13.97" y="-8.89" drill="0.8" shape="square"/>
+<pad name="12VNEXT" x="13.97" y="-11.43" drill="0.8" shape="square"/>
+<pad name="A1SET" x="7.62" y="7.62" drill="0.8" shape="square"/>
+<pad name="A0SET" x="10.16" y="7.62" drill="0.8" shape="square"/>
+<pad name="GSET" x="10.16" y="-20.32" drill="0.8" shape="square"/>
+<pad name="A2SET" x="7.62" y="-20.32" drill="0.8" shape="square"/>
+<rectangle x1="-16.51" y1="-31.75" x2="17.78" y2="-29.21" layer="21"/>
+<rectangle x1="-16.51" y1="12.7" x2="17.78" y2="15.24" layer="21"/>
 </package>
 </packages>
 <symbols>
@@ -499,6 +543,23 @@
 <pin name="P7B" x="5.08" y="17.78" length="middle" rot="R270"/>
 <pin name="P6B" x="10.16" y="17.78" length="middle" rot="R270"/>
 <rectangle x1="-10.16" y1="0" x2="10.16" y2="12.7" layer="94"/>
+</symbol>
+<symbol name="LED_DRIVER_ASSEMBLY_CHIP">
+<pin name="VCCIN" x="-20.32" y="-5.08" length="middle"/>
+<pin name="SDAIN" x="-20.32" y="0" length="middle"/>
+<pin name="SCLIN" x="-20.32" y="25.4" length="middle"/>
+<pin name="GNDIN" x="-20.32" y="30.48" length="middle"/>
+<rectangle x1="-15.24" y1="-5.08" x2="0" y2="30.48" layer="94"/>
+<rectangle x1="-15.24" y1="30.48" x2="0" y2="33.02" layer="94"/>
+<rectangle x1="-15.24" y1="-7.62" x2="0" y2="-5.08" layer="94"/>
+<pin name="DRAIN1" x="5.08" y="25.4" length="middle" rot="R180"/>
+<pin name="DRAIN2" x="5.08" y="20.32" length="middle" rot="R180"/>
+<pin name="DRAIN3" x="5.08" y="15.24" length="middle" rot="R180"/>
+<pin name="DRAIN4" x="5.08" y="10.16" length="middle" rot="R180"/>
+<pin name="DRAIN5" x="5.08" y="5.08" length="middle" rot="R180"/>
+<pin name="DRAIN6" x="5.08" y="0" length="middle" rot="R180"/>
+<pin name="DRAIN7" x="5.08" y="-5.08" length="middle" rot="R180"/>
+<pin name="DRAIN0" x="-20.32" y="5.08" length="middle"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -723,9 +784,10 @@
 </deviceset>
 <deviceset name="LED_DRIVER_ASSEMBLY_CHIP">
 <gates>
+<gate name="G$1" symbol="LED_DRIVER_ASSEMBLY_CHIP" x="7.62" y="-12.7"/>
 </gates>
 <devices>
-<device name="">
+<device name="" package="LED_DRIVER_ASSEMBLY_CHIP">
 <technologies>
 <technology name=""/>
 </technologies>
