@@ -1,3 +1,15 @@
+l = [0]*10
+l += [1]
+l += [1]
+l += [1]
+l += [1]
+l += [1]
+l += [1]
+print l
+ 
+
+
+
 import pygame, random, sys, math,time,commands,os
 from pygame.locals import *
 import cProfile
@@ -5,6 +17,9 @@ import Reactor as rec
 import Brence as br
 import Decay
 import smbus
+
+
+
 
 
 

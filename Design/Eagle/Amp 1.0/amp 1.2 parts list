@@ -1,0 +1,49 @@
+Partlist
+
+Exported from AMP 1.2.brd at 3/3/2014 9:38:59 AM
+
+EAGLE Version 6.5.0 Copyright (c) 1988-2013 CadSoft
+
+Assembly variant: 
+
+Part          Value          Package      Library        Position (inch)       Orientation
+
+12V           TPSQPAD1-20    P1-20        testpad        (0.2 2.95)            R0
+7809CT        9V out         78XXS        v-reg          (0.6 2)               R270
+AUDIOINLEFT   TPSQPAD1-20    P1-20        testpad        (0.75 2.2)            R90
+AUDIOINRIGHT  TPSQPAD1-20    P1-20        testpad        (0.65 1)              R90
+AUDIOOUTLEFT  TPSQPAD1-20    P1-20        testpad        (2.2 3)               R0
+AUDIOOUTRIGHT TPSQPAD1-20    P1-20        testpad        (2.15 1.45)           R0
+C1            220uF          B45181C      rcl            (0.3 1.35)            R90
+C2            220uF          B45181C      rcl            (0.2 0.35)            R270
+C3            47uF           E5-4         rcl            (1.45 2.1)            R180
+C4            47uF           E5-4         rcl            (1.45 2.3)            R180
+C5            470uF          E5-4         rcl            (2.1 2.8)             R0
+C6            6.8Uf          E5-4         rcl            (1 1.85)              R0
+C7            820pF          C050-050X075 rcl            (1 2.6)               R0
+C8            47uF           E5-4         rcl            (1.45 0.6)            R180
+C9            47uF           E5-4         rcl            (1.45 0.8)            R180
+C10           470uF          E5-4         rcl            (2.05 1.25)           R0
+C11           820pF          C050-050X075 rcl            (1 1.15)              R0
+C12           6.8Uf          E5-4         rcl            (1 0.35)              R0
+CLEANPWR      TPSQPAD1-20    P1-20        testpad        (0.65 1.5)            R0
+D1            1N4004         DO41-10      diode          (1.9 2.3)             R180
+D2            1N4004         DO41-10      diode          (1.9 2.1)             R0
+D3            1N5908         C4111-15     diode          (0.2 2.4)             R90
+D4            1N4004         DO41-10      diode          (1.85 0.8)            R180
+D5            1N4004         DO41-10      diode          (1.85 0.6)            R0
+GND           TPSQPAD1-20    P1-20        testpad        (1.9 3.05)            R0
+IC1           LM386N-1       DIL08        linear         (1 2.25)              R270
+IC2           LM386N-1       DIL08        linear         (1 0.75)              R270
+LED1                         LED5MM       led            (0.55 0.2)            R270
+R1            750            0204/7       rcl            (1.4 1.85)            R0
+R2            1K             0204/7       rcl            (0.55 0.55)           R270
+R3            1.1K           0204/7       rcl            (1 2.75)              R0
+R4            750            0204/7       rcl            (1.4 0.3)             R180
+R5            1.1K           0204/7       rcl            (1 1.35)              R180
+R6            750            0204/7       rcl            (1.4 2.55)            R180
+R7            750            0204/7       rcl            (1.45 1.05)           R0
+TIP31A        TIP31C         TO220V       transistor-npn (1.9 2.6)             R0
+TIP31A1       TIP31C         TO220V       transistor-npn (1.85 1.15)           R0
+TIP32A        TIP30V         TO220V       transistor-pnp (1.9 1.95)            R0
+TIP32A1       TIP32V         TO220V       transistor     (1.85 0.4)            R0
