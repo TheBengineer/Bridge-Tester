@@ -4,7 +4,6 @@ from pygame.locals import *
 import Reactor as rec
 #import Brence as br
 #import Decay
-import smbus
 
 
 
@@ -33,11 +32,6 @@ def Main():
     font = pygame.font.Font("freesansbold.ttf",12)
     run = 1
     
-    address = 0x48 # Address of ADC
-
-    bus = smbus.SMBus(1) # connect to IIC line # 1
-    bus.write_word_data(address,0x01,0x80E0) # Default setup
-
     ######################## Non-Reactor specific functions
     def keyPressed(inputKey):
         keysPressed = pygame.key.get_pressed()
@@ -51,17 +45,7 @@ def Main():
         ############## Window
         WindowSurface.fill(black) # Screen Redraw
 
-        readingraw = bus.read_word_data(address,0x00)
-        reading = int(readingraw/256)&0xff        
-        reading += (readingraw*256)&0xff00
-	#print reading, hex(reading), hex(readingraw)
-        try:
-            ADCNormalized = reading/655.35
-        except:
-            print "I2c Error"
-            ADCNormalized = 0
-        #print ADCNormalized
-        lines.insert(0,ADCNormalized*2.2)
+        lines.insert(0,int(random.random()*100))
         lines = lines[:400]
         tm = time.time()*50
         rec.Draw_Chart(WindowSurface,10,10,500,400,lines,(0,100,0,100),(255,100,0),(255,255,255),3)
@@ -80,7 +64,6 @@ def Main():
         ######################### Pygame drawing
         WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
         WindowSurface.blit(font.render(str((mousex,mousey)),1,(100,100,100)),(mousex+10,mousey))
-        WindowSurface.blit(font.render("ADC: "+str(hex(reading))+" "+str(ADCNormalized),1,(100,255,100)),(10,40))
         pygame.display.update()
         fpsclock.tick(50)
     pygame.quit()
