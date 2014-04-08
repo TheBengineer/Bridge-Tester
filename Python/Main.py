@@ -1,15 +1,3 @@
-l = [0]*10
-l += [1]
-l += [1]
-l += [1]
-l += [1]
-l += [1]
-l += [1]
-print l
- 
-
-
-
 import pygame, random, sys, math,time,commands,os
 from pygame.locals import *
 import cProfile
@@ -87,7 +75,7 @@ def Main():
             print "I2c Error"
             ADCNormalized = 0
         #print ADCNormalized
-        lines.insert(0,ADCNormalized)
+        lines.insert(0,mousex/48)
         lines = lines[:400]
         tm = time.time()*50
         rec.Draw_Chart(WindowSurface,10,10,400,200,lines,(0,100,0,100),(255,100,0),(255,255,255),3)
