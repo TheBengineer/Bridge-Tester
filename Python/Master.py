@@ -34,17 +34,11 @@ class IOThread(Thread):
         self.pressureArray = []
         self.Display = [0]*5
         if pi == 1: # running on a Pi?
-            self.bus = self.initI2C(self.pressureAddress,self.distanceAddress)
-    def initI2C(self, pressureA,distanceA):
+            self.bus = initI2C(self.pressureAddress,self.distanceAddress, self.ledAddresses)
+    def initI2C(pressureA,distanceA):
         bus = smbus.SMBus(1)# Setup IIC
-        try:
-            bus.write_word_data(pressureA,0x01,0x80E0) # Default setup for Pressure
-        except IOError:
-            print "[INFO] Cannot reach the Pressure sensor on IIC"
-        try:
-            bus.write_word_data(distanceA,0x01,0x80E0) # Default setup for Distance
-        except IOError:
-            print "[INFO] Cannot reach the Distance sensor on IIC"
+        bus.write_word_data(pressureA,0x01,0x80E0) # Default setup for Pressure
+        bus.write_word_data(distanceA,0x01,0x80E0) # Default setup for Distance
         #LEDS don't need setup
         return bus
     def pollpress(self):
@@ -70,10 +64,10 @@ class IOThread(Thread):
             while (self.count < 5):
                 self.pollpress()
                 self.setled(self.ledAddresses[self.LED],self.Display[self.LED])
-                print("LED",self.LED)
-                print("distance",self.distance)
                 self.count += 1
                 self.LED += 1
+                print("LED",self.LED)
+                print("distance",self.distance)
                 time.sleep(.0057)
 
 
