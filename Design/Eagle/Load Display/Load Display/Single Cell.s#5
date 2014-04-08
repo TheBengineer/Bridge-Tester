@@ -2292,8 +2292,8 @@ type 0207, grid 15mm</description>
 <wire x1="3.175" y1="-0.889" x2="3.175" y2="0.889" width="0.1524" layer="21"/>
 <wire x1="5.715" y1="0" x2="4.064" y2="0" width="0.6096" layer="21"/>
 <wire x1="-5.715" y1="0" x2="-4.064" y2="0" width="0.6096" layer="21"/>
-<pad name="1" x="-7.62" y="0" drill="0.8128" shape="octagon"/>
-<pad name="2" x="7.62" y="0" drill="0.8128" shape="octagon"/>
+<pad name="1" x="-7.62" y="0" drill="0.8128" diameter="3.81" shape="octagon"/>
+<pad name="2" x="7.62" y="0" drill="0.8128" diameter="3.81" shape="octagon"/>
 <text x="-3.175" y="1.397" size="1.27" layer="25" ratio="10">&gt;NAME</text>
 <text x="-2.286" y="-0.6858" size="1.27" layer="27" ratio="10">&gt;VALUE</text>
 <rectangle x1="3.175" y1="-0.3048" x2="4.0386" y2="0.3048" layer="21"/>
@@ -4359,18 +4359,18 @@ Pogo pins- HW-11044</description>
 <variantdefs>
 </variantdefs>
 <classes>
-<class number="0" name="default" width="0" drill="0">
+<class number="0" name="default" width="0.000609375" drill="0">
 </class>
 </classes>
 <parts>
 <part name="DIS1" library="Parts" deviceset="HD-E101" device="BACKWARDS" value="HD-E101BIG"/>
-<part name="R1" library="Ben-rcl" deviceset="R-US_" device="0207/10" value="60"/>
-<part name="R2" library="Ben-rcl" deviceset="R-US_" device="0207/10" value="60"/>
-<part name="R3" library="Ben-rcl" deviceset="R-US_" device="0207/10" value="60"/>
-<part name="R4" library="Ben-rcl" deviceset="R-US_" device="0207/10" value="60"/>
-<part name="R5" library="Ben-rcl" deviceset="R-US_" device="0207/10" value="60"/>
-<part name="R6" library="Ben-rcl" deviceset="R-US_" device="0207/10" value="60"/>
-<part name="R7" library="Ben-rcl" deviceset="R-US_" device="0207/10" value="60"/>
+<part name="R1" library="Ben-rcl" deviceset="R-US_" device="0207/15" value="60"/>
+<part name="R2" library="Ben-rcl" deviceset="R-US_" device="0207/15" value="60"/>
+<part name="R3" library="Ben-rcl" deviceset="R-US_" device="0207/15" value="60"/>
+<part name="R4" library="Ben-rcl" deviceset="R-US_" device="0207/15" value="60"/>
+<part name="R5" library="Ben-rcl" deviceset="R-US_" device="0207/15" value="60"/>
+<part name="R6" library="Ben-rcl" deviceset="R-US_" device="0207/15" value="60"/>
+<part name="R7" library="Ben-rcl" deviceset="R-US_" device="0207/15" value="60"/>
 <part name="U$2" library="Parts" deviceset="LED_DRIVERBOARD" device="ADAFRUIT"/>
 <part name="U$1" library="Parts" deviceset="SOLDER_JUMPER" device=""/>
 <part name="U$3" library="Parts" deviceset="SOLDER_JUMPER" device=""/>
@@ -4380,6 +4380,9 @@ Pogo pins- HW-11044</description>
 <part name="U$7" library="Parts" deviceset="SOLDER_JUMPER" device=""/>
 <part name="U$8" library="Parts" deviceset="LED_DRIVERBOARD" device=""/>
 <part name="JP1" library="Ben-SF-Con" deviceset="M03X2" device="SHROUD"/>
+<part name="JP2" library="Ben-SF-Con" deviceset="M03X2" device="SHROUD">
+<attribute name="PROD_ID" value="CONN-10681"/>
+</part>
 </parts>
 <sheets>
 <sheet>
@@ -4403,6 +4406,7 @@ Pogo pins- HW-11044</description>
 <instance part="U$7" gate="G$1" x="147.32" y="-12.7" rot="R90"/>
 <instance part="U$8" gate="G$1" x="76.2" y="-55.88"/>
 <instance part="JP1" gate="G$1" x="20.32" y="45.72"/>
+<instance part="JP2" gate="G$1" x="20.32" y="66.04"/>
 </instances>
 <busses>
 </busses>
@@ -4536,18 +4540,6 @@ Pogo pins- HW-11044</description>
 <junction x="91.44" y="17.78"/>
 </segment>
 </net>
-<net name="N$18" class="0">
-<segment>
-<pinref part="DIS1" gate="A" pin="DP"/>
-<wire x1="58.42" y1="104.14" x2="58.42" y2="106.68" width="0.1524" layer="91"/>
-<wire x1="58.42" y1="106.68" x2="96.52" y2="106.68" width="0.1524" layer="91"/>
-<pinref part="U$2" gate="G$1" pin="DRAIN7"/>
-<wire x1="96.52" y1="106.68" x2="96.52" y2="17.78" width="0.1524" layer="91"/>
-<pinref part="U$8" gate="G$1" pin="DRAIN7"/>
-<wire x1="96.52" y1="-35.56" x2="96.52" y2="17.78" width="0.1524" layer="91"/>
-<junction x="96.52" y="17.78"/>
-</segment>
-</net>
 <net name="VCC5" class="0">
 <segment>
 <pinref part="U$7" gate="G$1" pin="P$4"/>
@@ -4568,6 +4560,10 @@ Pogo pins- HW-11044</description>
 <wire x1="7.62" y1="45.72" x2="7.62" y2="5.08" width="0.1524" layer="91"/>
 <wire x1="7.62" y1="5.08" x2="40.64" y2="5.08" width="0.1524" layer="91"/>
 <junction x="40.64" y="5.08"/>
+<pinref part="JP2" gate="G$1" pin="3"/>
+<wire x1="7.62" y1="45.72" x2="7.62" y2="66.04" width="0.1524" layer="91"/>
+<wire x1="7.62" y1="66.04" x2="12.7" y2="66.04" width="0.1524" layer="91"/>
+<junction x="7.62" y="45.72"/>
 </segment>
 </net>
 <net name="SDA" class="0">
@@ -4582,6 +4578,10 @@ Pogo pins- HW-11044</description>
 <pinref part="JP1" gate="G$1" pin="6"/>
 <wire x1="27.94" y1="43.18" x2="35.56" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="35.56" y1="43.18" x2="35.56" y2="-7.62" width="0.1524" layer="91"/>
+<wire x1="35.56" y1="43.18" x2="35.56" y2="63.5" width="0.1524" layer="91"/>
+<junction x="35.56" y="43.18"/>
+<pinref part="JP2" gate="G$1" pin="6"/>
+<wire x1="35.56" y1="63.5" x2="27.94" y2="63.5" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="SSCL" class="0">
@@ -4597,6 +4597,10 @@ Pogo pins- HW-11044</description>
 <wire x1="12.7" y1="43.18" x2="10.16" y2="43.18" width="0.1524" layer="91"/>
 <wire x1="10.16" y1="43.18" x2="10.16" y2="-10.16" width="0.1524" layer="91"/>
 <wire x1="10.16" y1="-10.16" x2="35.56" y2="-10.16" width="0.1524" layer="91"/>
+<wire x1="10.16" y1="43.18" x2="10.16" y2="63.5" width="0.1524" layer="91"/>
+<junction x="10.16" y="43.18"/>
+<pinref part="JP2" gate="G$1" pin="5"/>
+<wire x1="10.16" y1="63.5" x2="12.7" y2="63.5" width="0.1524" layer="91"/>
 </segment>
 </net>
 <net name="GND" class="0">
@@ -4621,6 +4625,10 @@ Pogo pins- HW-11044</description>
 <wire x1="12.7" y1="48.26" x2="5.08" y2="48.26" width="0.1524" layer="91"/>
 <wire x1="5.08" y1="48.26" x2="5.08" y2="10.16" width="0.1524" layer="91"/>
 <junction x="5.08" y="10.16"/>
+<pinref part="JP2" gate="G$1" pin="1"/>
+<wire x1="5.08" y1="48.26" x2="5.08" y2="68.58" width="0.1524" layer="91"/>
+<wire x1="5.08" y1="68.58" x2="12.7" y2="68.58" width="0.1524" layer="91"/>
+<junction x="5.08" y="48.26"/>
 </segment>
 <segment>
 <pinref part="U$1" gate="G$1" pin="P$3"/>
@@ -4686,10 +4694,21 @@ Pogo pins- HW-11044</description>
 <segment>
 <pinref part="JP1" gate="G$1" pin="2"/>
 <wire x1="27.94" y1="48.26" x2="43.18" y2="48.26" width="0.1524" layer="91"/>
-<wire x1="43.18" y1="48.26" x2="43.18" y2="109.22" width="0.1524" layer="91"/>
+<wire x1="43.18" y1="48.26" x2="43.18" y2="68.58" width="0.1524" layer="91"/>
 <pinref part="DIS1" gate="A" pin="CA@1"/>
+<wire x1="43.18" y1="68.58" x2="43.18" y2="109.22" width="0.1524" layer="91"/>
 <wire x1="43.18" y1="109.22" x2="71.12" y2="109.22" width="0.1524" layer="91"/>
 <wire x1="71.12" y1="109.22" x2="71.12" y2="104.14" width="0.1524" layer="91"/>
+<pinref part="JP2" gate="G$1" pin="2"/>
+<wire x1="27.94" y1="68.58" x2="43.18" y2="68.58" width="0.1524" layer="91"/>
+<junction x="43.18" y="68.58"/>
+</segment>
+</net>
+<net name="N$17" class="0">
+<segment>
+<pinref part="U$8" gate="G$1" pin="DRAIN7"/>
+<pinref part="U$2" gate="G$1" pin="DRAIN7"/>
+<wire x1="96.52" y1="-35.56" x2="96.52" y2="17.78" width="0.1524" layer="91"/>
 </segment>
 </net>
 </nets>
