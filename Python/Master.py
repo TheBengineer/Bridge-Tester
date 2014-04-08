@@ -1,40 +1,50 @@
-import time, os, pygame, random from threading import Thread ## import 
-from pygame.locals import * pi = 0 # 1 = running on pi, 0 = running in 
-test mode if os.path.exists("/dev/i2c-0"): # Am I runnin on a pi?
+import time, os, pygame, random
+from threading import Thread    ## import
+from pygame.locals import *
+
+
+pi = 0 # 1 = running on pi, 0 = running in test mode
+if os.path.exists("/dev/i2c-0"): # Am I runnin on a pi?
     pi = 1
-    import smbus if pi == 1:
-    print "[INFO] Detected I2C. Running normally" else:
-    print "[INFO] Did not detect I2C. Running in simulation mode" class 
-fakeIIC():
+    import smbus
+
+if pi == 1:
+    print "[INFO] Detected I2C. Running normally"
+else:
+    print "[INFO] Did not detect I2C. Running in simulation mode"
+
+class fakeIIC():
     def read_word_data(self,a,b):
         return int(random.random()*65535)
     def write_byte_data(self,a,b,c):
         pass
     def write_word_data(self,a,b,c):
-        pass class IOThread(Thread):
-    def __init__(self): ## to pass a variable to the class add here
+        pass
+
+class IOThread(Thread):
+    def __init__(self):  ## to pass a variable to the class add here
         Thread.__init__(self)
         self.pressure = 0
         self.distance = 0
         self.pressureAddress = 0x48 # Address of Pressure ADC
         self.distanceAddress = 0x49 # Address of Distance ADC
-        self.ledAddresses = [0x60,0x61,0x62,0x63,0x64] # Addresses of 
-LED 7 segment display Drivers
-        self.bus = fakeIIC() # just init this in case something ties to 
-use it.
-        self.segmentLookup = [63, 6, 91, 79, 102, 109, 125, 7, 127, 111, 
-119, 124, 57, 94, 121, 113, 123]
+        self.ledAddresses = [0x60,0x61,0x62,0x63,0x64] # Addresses of LED 7 segment display Drivers
+        self.bus = fakeIIC() # just init this in case something ties to use it.
+        self.segmentLookup = [63, 6, 91, 79, 102, 109, 125, 7, 127, 111, 119, 124, 57, 94, 121, 113, 123]
         self.pressureArray = []
         self.Display = [0]*5
         if pi == 1: # running on a Pi?
-            self.bus = 
-initI2C(self.pressureAddress,self.distanceAddress, self.ledAddresses)
-    def initI2C(pressureA,distanceA):
+            self.bus = self.initI2C(self.pressureAddress,self.distanceAddress)
+    def initI2C(self, pressureA,distanceA):
         bus = smbus.SMBus(1)# Setup IIC
-        bus.write_word_data(pressureA,0x01,0x80E0) # Default setup for 
-Pressure
-        bus.write_word_data(distanceA,0x01,0x80E0) # Default setup for 
-Distance
+        try:
+            bus.write_word_data(pressureA,0x01,0x80E0) # Default setup for Pressure
+        except IOError:
+            print "[INFO] Cannot reach the Pressure sensor on IIC"
+        try:
+            bus.write_word_data(distanceA,0x01,0x80E0) # Default setup for Distance
+        except IOError:
+            print "[INFO] Cannot reach the Distance sensor on IIC"
         #LEDS don't need setup
         return bus
     def pollpress(self):
@@ -43,15 +53,14 @@ Distance
         self.pressureArray.append(readingraw)
         return pressure
     def setled(self,cellAddress,numberToDisplay):
-        self.bus.write_byte_data(cellAddress, 0x44, 
-self.segmentLookup[numberToDisplay])
+        self.bus.write_byte_data(cellAddress, 0x44, self.segmentLookup[numberToDisplay])
     def getdist(self):
         readingraw = self.bus.read_word_data(self.distanceAddress,0x00)
-        distance = readingraw
+        distance = readingraw 
         return distance
-    def run(self): ## dont need it here
+    def run(self):  ## dont need it here
         error = 0
-        while error == 0: ## Main thread program using passed variable
+        while error == 0:  ## Main thread program using passed variable
             self.pollpress()
             self.getdist()
             print("Pressure",self.pressure)
@@ -65,8 +74,11 @@ self.segmentLookup[numberToDisplay])
                 print("distance",self.distance)
                 self.count += 1
                 self.LED += 1
-                time.sleep(.0057) def 
-Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd,DataMin,DataMax),color,bordercolor,border):
+                time.sleep(.0057)
+
+
+
+def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd,DataMin,DataMax),color,bordercolor,border):
     DataLen = DataEnd-DataStart
     DataHeight = DataMax-DataMin
     xscale = (hsize+1)/DataLen
@@ -87,6 +99,9 @@ Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd,DataMin,DataMax),c
     pygame.draw.lines(surface,color,0,lines,1)
     
     
+
+
+
 def Main():
     ################ Pygame Init
     pygame.init()
@@ -129,7 +144,19 @@ def Main():
         WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
         pygame.display.update()
         fpsclock.tick(60)
-    pygame.quit() tclass = IOThread() ## create instance tclass.start() 
-## start class running
+    pygame.quit()
+
+
+
+tclass = IOThread() ## create instance
+tclass.start() ## start class running
+
+
+
 Main()
+
+
+
+
+
 
