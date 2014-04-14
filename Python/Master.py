@@ -32,7 +32,7 @@ class IOThread(Thread):
         self.pressure = 0
         self.distance = 0
         self.pressureAddress = 0x48 # Address of Pressure ADC
-        self.distanceAddress = 0x48 # Address of Distance ADC
+        self.distanceAddress = 0x49 # Address of Distance ADC (adddr hooked to vcc)
         self.ledAddresses = [0x60,0x61,0x62,0x63,0x64] # Addresses of LED 7 segment display Drivers
         self.bus = fakeIIC() # just init this in case something ties to use it.
         self.segmentLookup = [63, 6, 91, 79, 102, 109, 125, 7, 127, 111, 119, 124, 57, 94, 121, 113, 123]
@@ -49,8 +49,8 @@ class IOThread(Thread):
         return bus
     def pollpress(self):
         readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
-        pressure = readingraw/566.35
-        self.pressureArray.append(readingraw)
+        pressure = readingraw*2/566.35
+        self.pressureArray.append([readingraw,time.time()])#time.time is far away from reading, but should be ok
         return pressure
     def setled(self,cellAddress,numberToDisplay):
         self.bus.write_byte_data(cellAddress, 0x44, self.segmentLookup[numberToDisplay])
