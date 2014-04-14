@@ -4,9 +4,6 @@ import cProfile
 import Reactor as rec
 import Brence as br
 import Decay
-import smbus
-
-
 
 
 
@@ -18,8 +15,7 @@ def Main():
     WindowSurface = pygame.display.set_mode((640,480))
     pygame.display.set_caption("Pygame Test ")
     d = Decay.Decay()
-    bus = smbus.SMBus(1)
-    ADC = os.system("i2cset -y 1 0x48 0x01 0x80E0 w")
+    ADC = os.system("i2cset -y 1 0x48 0x01 0x00E0 w")
 
     ####################    Pygame Declarations
     testSurface = pygame.image.load("test.png")
@@ -73,9 +69,9 @@ def Main():
             ADCNormalized = int(ADC,16)/655.35#327.675
         except:
             print "I2c Error"
-            ADCNormalized = 0
+            ADCNormalized = 0;
         #print ADCNormalized
-        lines.insert(0,mousex/48)
+        lines.insert(0,ADCNormalized)
         lines = lines[:400]
         tm = time.time()*50
         rec.Draw_Chart(WindowSurface,10,10,400,200,lines,(0,100,0,100),(255,100,0),(255,255,255),3)

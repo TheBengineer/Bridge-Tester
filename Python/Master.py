@@ -1,6 +1,11 @@
+#!/usr/bin/python
+
+
 import time, os, pygame, random
 from threading import Thread    ## import
 from pygame.locals import *
+
+from  technical import *
 
 
 pi = 0 # 1 = running on pi, 0 = running in test mode
@@ -32,6 +37,7 @@ class IOThread(Thread):
         self.bus = fakeIIC() # just init this in case something ties to use it.
         self.segmentLookup = [63, 6, 91, 79, 102, 109, 125, 7, 127, 111, 119, 124, 57, 94, 121, 113, 123]
         self.pressureArray = []
+	self.lastPressure = 0
         self.Display = [0]*5
         if pi == 1: # running on a Pi?
             self.bus = self.initI2C(self.pressureAddress,self.distanceAddress)
@@ -42,32 +48,32 @@ class IOThread(Thread):
         #LEDS don't need setup
         return bus
     def pollpress(self):
-        readingraw = self.bus.read_word_data(self.pressureAddress,0x00)
-        pressure = readingraw
+        readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
+        pressure = readingraw/566.35
         self.pressureArray.append(readingraw)
         return pressure
     def setled(self,cellAddress,numberToDisplay):
         self.bus.write_byte_data(cellAddress, 0x44, self.segmentLookup[numberToDisplay])
     def getdist(self):
         readingraw = self.bus.read_word_data(self.distanceAddress,0x00)
-        distance = readingraw 
+        distance = readingraw/566.35
         return distance
     def run(self):  ## dont need it here
         error = 0
         while error == 0:  ## Main thread program using passed variable
-            self.pollpress()
+            self.lastPressure = self.pollpress()
             self.getdist()
-            print("Pressure",self.pressure)
+            #print("Pressure",self.pressure)
             time.sleep(.005)
             self.count = 0
             self.LED = 0
             while (self.count < 5):
                 self.pollpress()
-                self.setled(self.ledAddresses[self.LED],self.Display[self.LED])
+                #self.setled(self.ledAddresses[self.LED],self.Display[self.LED])
                 self.count += 1
                 self.LED += 1
-                print("LED",self.LED)
-                print("distance",self.distance)
+                #print("LED",self.LED)
+                #print("distance",self.distance)
                 time.sleep(.0057)
 
 
@@ -130,7 +136,7 @@ def Main():
                     runProgram = 0
                     break
         
-        lines.insert(0,[mousex/6.4,mousey/4.8])
+        lines.insert(0,tclass.lastPressure)
         lines = lines[:400]
         Draw_Chart(WindowSurface,10,10,400,200,lines,(0,len(lines),0,100),(255,100,0),(255,255,255),3)
         

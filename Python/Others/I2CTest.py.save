@@ -1,0 +1,12 @@
+import commands, time
+
+while 1:
+    ADC = commands.getoutput("i2cset -y 1 0x60 0x44 0xFF")
+    time.sleep(.1)
+    print "ON"
+    ADC = commands.getoutput("i2cset -y 1 0x60 0x44 0x00")
+    time.sleep(.1)
+    print "OFF"
+
+
+
