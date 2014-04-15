@@ -343,7 +343,7 @@ UsedLibrary="A:/Bridge-Tester/Design/Eagle/Ben-rcl.lbr"
 
 [Win_1]
 Type="Library Editor"
-Loc="0 0 911 1041"
+Loc="0 0 911 997"
 State=0
 Number=2
 File="A:/Bridge-Tester/Design/Eagle/Ben-rcl.lbr"
@@ -383,8 +383,8 @@ Package="0207/15"
 
 [Win_2]
 Type="Control Panel"
-Loc="1076 56 1675 455"
-State=2
+Loc="617 56 1216 455"
+State=0
 Number=0
 
 [Desktop]
