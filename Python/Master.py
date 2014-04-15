@@ -60,7 +60,7 @@ class IOThread(Thread):
         self.bus.write_byte_data(cellAddress, 0x44, self.segmentLookup[numberToDisplay])
     def getdist(self):
         readingraw = convertReading(self.bus.read_word_data(self.distanceAddress,0x00))
-        distance = readingraw/566.35
+        distance = (readingraw-1100)/535.0
         return distance
     def run(self):  ## dont need it here
         self.error = 0
@@ -136,9 +136,10 @@ def Main():
     runProgram = 1
     mousex, mousey = 0,0
     lines = []
-    Load = [0,110]
-    Dist = [0,110]
+    Load = [0,50000]
+    Dist = [0,50000]
     tp = 0.0
+    td = 0.0
     while runProgram:
         WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
         # Process events
@@ -181,6 +182,7 @@ def Main():
         #Draw
         WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
         WindowSurface.blit(forceFont.render(str(tp)[:10],1,(100,255,100)),(10,10))
+        WindowSurface.blit(forceFont.render(str(td)[:5]+"\"",1,(100,255,100)),(700,10))
         pygame.display.update()
         fpsclock.tick(10)
     pygame.quit()
