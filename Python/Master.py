@@ -37,8 +37,8 @@ class IOThread(Thread):
         self.bus = fakeIIC() # just init this in case something ties to use it.
         self.segmentLookup = [63, 6, 91, 79, 102, 109, 125, 7, 127, 111, 119, 124, 57, 94, 121, 113, 123]
         self.pressureArray = []
-	self.lastPressure = 0
-	self.lastDistance = 0
+        self.lastPressure = 0
+        self.lastDistance = 0
         self.Display = [0]*5
         if pi == 1: # running on a Pi?
             self.bus = self.initI2C(self.pressureAddress,self.distanceAddress)
@@ -50,8 +50,8 @@ class IOThread(Thread):
         return bus
     def pollpress(self):
         readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
-        pressure = readingraw/566.35
-        if pressure < 90: 
+        pressure = readingraw
+        if pressure < 50000: 
                 self.pressureArray.append([pressure,self.lastDistance,time.time()])#time.time is far away from reading, but should be ok
                 return pressure
         else:
@@ -68,7 +68,7 @@ class IOThread(Thread):
             self.lastPressure = self.pollpress()
             self.lastDistance = self.getdist()
             #print("Pressure",self.pressure)
-            time.sleep(.005)
+            time.sleep(.0001)
             self.LED = 0
             #while (self.count < 5):
             #    self.pollpress()
@@ -105,7 +105,6 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     pygame.draw.circle(surface,(255,0,0,128),(int(lines[-1][0]),int(lines[-1][1])),10)
     surface.blit(font.render("Data Width: "+str(DataHeightX)+" X Scale:"+str(xscale2)+" Y Scale:"+str(yscale),1,(100,255,100)),(40,80))
     try:
-        pygame.draw.lines(surface,(255,0,0),0,((x,y),(x+(DataHeightX*xscale2),y+vsize+(DataHeightY*yscale))),stroke)
         surface.blit(font.render("Choords: "+str((float(lines[3][0]),float(lines[3][1]))),1,(100,255,100)),(40,100))
         surface.blit(font.render("Choords: "+str((float(dataset[3][0]),float(dataset[3][1]))),1,(100,255,100)),(40,120))
         surface.blit(font.render("Last: "+str((float(lines[-1][0]),float(lines[-1][1]))),1,(100,255,100)),(40,140))
@@ -121,7 +120,7 @@ def Main():
     ################ Pygame Init
     pygame.init()
     fpsclock = pygame.time.Clock()
-    WindowSurface = pygame.display.set_mode((1000,500))
+    WindowSurface = pygame.display.set_mode((1400,800))
     pygame.display.set_caption("Pygame Test")
     
     
@@ -133,11 +132,13 @@ def Main():
     pygame.draw.line(MouseSurface,(0,255,0),(0,16),(32,16),1)
     
     font = pygame.font.Font("freesansbold.ttf",12)
+    forceFont = pygame.font.Font("freesansbold.ttf",200)
     runProgram = 1
     mousex, mousey = 0,0
     lines = []
     Load = [0,110]
     Dist = [0,110]
+    tp = 0.0
     while runProgram:
         WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
         # Process events
@@ -175,11 +176,11 @@ def Main():
             #print Dist, Load
             lines.append([td,tp])
         if len(lines)>2:
-            Draw_Chart(WindowSurface,10,10,800,400,lines,(0,len(lines)),(Dist[1],Dist[0]+.0001),(Load[1],Load[0]+.0001),(255,100,0),1,(255,255,255),3)
+            Draw_Chart(WindowSurface,10,200,1380,590,lines,(0,len(lines)),(Dist[1],Dist[0]+.0001),(Load[1],Load[0]+.0001),(255,0,0),5,(255,255,255),3)
         
         #Draw
         WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
-        WindowSurface.blit(font.render("load: "+str(Load)+" Dist: "+str(Dist)+" Lines: "+str(len(lines)),1,(100,255,100)),(10,40))
+        WindowSurface.blit(forceFont.render(str(tp)[:10],1,(100,255,100)),(10,10))
         pygame.display.update()
         fpsclock.tick(10)
     pygame.quit()
