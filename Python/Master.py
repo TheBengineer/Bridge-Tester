@@ -31,8 +31,8 @@ class IOThread(Thread):
         Thread.__init__(self)
         self.pressure = 0
         self.distance = 0
-        self.pressureAddress = 0x48 # Address of Pressure ADC
-        self.distanceAddress = 0x49 # Address of Distance ADC (adddr hooked to vcc)
+        self.pressureAddress = 0x49 # Address of Pressure ADC
+        self.distanceAddress = 0x48 # Address of Distance ADC (adddr hooked to vcc)
         self.ledAddresses = [0x60,0x61,0x62,0x63,0x64] # Addresses of LED 7 segment display Drivers
         self.bus = fakeIIC() # just init this in case something ties to use it.
         self.segmentLookup = [63, 6, 91, 79, 102, 109, 125, 7, 127, 111, 119, 124, 57, 94, 121, 113, 123]
@@ -60,8 +60,8 @@ class IOThread(Thread):
         distance = readingraw/566.35
         return distance
     def run(self):  ## dont need it here
-        error = 0
-        while error == 0:  ## Main thread program using passed variable
+        self.error = 0
+        while self.error == 0:  ## Main thread program using passed variable
             self.lastPressure = self.pollpress()
             self.lastDistance = self.getdist()
             #print("Pressure",self.pressure)
@@ -78,12 +78,13 @@ class IOThread(Thread):
 
 
 
-def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd,DataMin,DataMax),color,stroke,bordercolor,border):
+def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax),(DYMin,DYMax),color,stroke,bordercolor,border):
     DataLen = DataEnd-DataStart
-    DataHeight = DataMax-DataMin
+    DataHeightX = DXMax-DXMin
+    DataHeightY = DYMax-DYMin
     xscale = (hsize+1)/DataLen
-    xscale2 = (hsize+1)/DataHeight
-    yscale = (vsize+1)/DataHeight
+    xscale2 = (hsize+1)/DataHeightX
+    yscale = (vsize+1)/DataHeightY
     if border >= 1:
         pygame.draw.lines(surface,bordercolor,0,((x,y),(x,y+vsize),(x+hsize,y+vsize),(x+hsize,y),(x,y)),border)
     lines = []
@@ -95,8 +96,9 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd,DataMin,DataMa
         if (type(i)== type(float())) or (type(i) == type(int())):
             lines.append((x+(j*xscale),(y+vsize)-(i*yscale)))
         elif len(i) == 2:
-            lines.append(((i[0]*xscale2)+x,y+(i[1]*yscale)))
+            lines.append(((i[0]*xscale2)+x-(DXMin*xscale2),y-(DYMin*yscale)+(i[1]*yscale)))
     pygame.draw.lines(surface,color,0,lines,stroke)
+    pygame.draw.circle(surface,(255,0,0,128),(int(lines[-1][0]),int(lines[-1][1])),10)
     
     
 
@@ -120,9 +122,9 @@ def Main():
     font = pygame.font.Font("freesansbold.ttf",12)
     runProgram = 1
     mousex, mousey = 0,0
-    lines = [0.0,0.0]*100
-    Load = [0,0]
-    Dist = [0,0]
+    lines = [0.0,0.0]*2
+    Load = [0,110]
+    Dist = [0,110]
     while runProgram:
         WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
         # Process events
@@ -135,6 +137,7 @@ def Main():
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     runProgram = 0
+                    tclass.error = 1
                     break
         readings = 0
 	pressures = 0
@@ -144,17 +147,19 @@ def Main():
 		readings += 1
 		pressures += tmpAr[0]
 		distances += tmpAr[1]
-		if tmpAr[0] > Load[0]:
-			load[0] = tmpAr[0]
-		if tmpAr[0] < Load[1]:
-			load[1] = tmpAr[0]
-		if tmpAr[1] > Dist[0]:
-			Dist[0] = tmpAr[1]
-		if tmpAr[1] < Dist[1]:
-			Dist[1] = tmpAr[1]
-        lines.insert(0,[distances/readings,pressures/readings])
-        lines = lines[:400]
-        Draw_Chart(WindowSurface,10,10,800,400,lines,(Dist[1],Dist[0],Load[1],Load[0]),(255,100,0),5,(255,255,255),3)
+	tp = pressures/readings
+	td = distances/readings
+	if tp > Load[0]:
+		Load[0] = tp
+	if tp < Load[1]:
+		Load[1] = tp
+	if td > Dist[0]:
+		Dist[0] = td
+	if td < Dist[1]:
+		Dist[1] = td
+        print Dist, Load
+        lines.append([td,tp])
+        Draw_Chart(WindowSurface,10,10,800,400,lines,(0,len(lines)),(Dist[1],Dist[0]+1),(Load[1],Load[0]+1),(255,100,0),1,(255,255,255),3)
         
         #Draw
         WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
