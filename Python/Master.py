@@ -100,13 +100,15 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
         if (type(i)== type(float())) or (type(i) == type(int())):
             lines.append((x+(j*xscale),(y+vsize)-(i*yscale)))
         elif len(i) == 2:
-            lines.append((x+(i[0]*xscale2)-(DXMin*xscale2),y+vsize-(i[1]*yscale)+(DYMin*yscale)))
+            lines.append((x+((i[0]-DXMin)*xscale2),y+vsize+((DYMin-i[1])*yscale)))
     pygame.draw.lines(surface,color,0,lines,stroke)
     pygame.draw.circle(surface,(255,0,0,128),(int(lines[-1][0]),int(lines[-1][1])),10)
     surface.blit(font.render("X Width: "+str(DataHeightX)+" X Scale:"+str(xscale2)+" Y Scale:"+str(yscale),1,(100,255,100)),(40,80))
     try:
         surface.blit(font.render("Choords: "+str((int(lines[3][0]),int(lines[3][1]))),1,(100,255,100)),(40,100))
         surface.blit(font.render("Choords: "+str((int(dataset[3][0]),int(dataset[3][1]))),1,(100,255,100)),(40,120))
+        surface.blit(font.render("Last: "+str((int(lines[-1][0]),int(lines[-1][1]))),1,(100,255,100)),(40,140))
+        surface.blit(font.render("Last: "+str((int(dataset[-1][0]),int(dataset[-1][1]))),1,(100,255,100)),(40,160))
     except:
         pass
     
@@ -131,7 +133,7 @@ def Main():
     font = pygame.font.Font("freesansbold.ttf",12)
     runProgram = 1
     mousex, mousey = 0,0
-    lines = [0.0,0.0]
+    lines = []
     Load = [0,110]
     Dist = [0,110]
     while runProgram:
