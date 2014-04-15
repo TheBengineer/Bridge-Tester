@@ -51,8 +51,11 @@ class IOThread(Thread):
     def pollpress(self):
         readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
         pressure = readingraw/566.35
-        self.pressureArray.append([pressure,self.lastDistance,time.time()])#time.time is far away from reading, but should be ok
-        return pressure
+        if pressure < 90: 
+                self.pressureArray.append([pressure,self.lastDistance,time.time()])#time.time is far away from reading, but should be ok
+                return pressure
+        else:
+                return 0.0
     def setled(self,cellAddress,numberToDisplay):
         self.bus.write_byte_data(cellAddress, 0x44, self.segmentLookup[numberToDisplay])
     def getdist(self):
@@ -147,18 +150,19 @@ def Main():
 		readings += 1
 		pressures += tmpAr[0]
 		distances += tmpAr[1]
-	tp = pressures/readings
-	td = distances/readings
-	if tp > Load[0]:
-		Load[0] = tp
-	if tp < Load[1]:
-		Load[1] = tp
-	if td > Dist[0]:
-		Dist[0] = td
-	if td < Dist[1]:
-		Dist[1] = td
-        print Dist, Load
-        lines.append([td,tp])
+        if readings > 0:
+		tp = pressures/readings
+		td = distances/readings
+		if tp > Load[0]:
+			Load[0] = tp
+		if tp < Load[1]:
+			Load[1] = tp
+		if td > Dist[0]:
+			Dist[0] = td
+		if td < Dist[1]:
+			Dist[1] = td
+        	print Dist, Load
+        	lines.append([td,tp])
         Draw_Chart(WindowSurface,10,10,800,400,lines,(0,len(lines)),(Dist[1],Dist[0]+1),(Load[1],Load[0]+1),(255,100,0),1,(255,255,255),3)
         
         #Draw

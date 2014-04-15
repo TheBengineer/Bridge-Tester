@@ -10,12 +10,14 @@ while 1:
 	reading = int(readingraw/256)&0xff        
 	reading += (readingraw*256)&0xff00
 	#print reading, hex(reading), hex(readingraw)
-	print
+	print 
 	try:
 	    ADCNormalized = reading*2/655.35
 	except:
 	    print "I2c Error"
 	    ADCNormalized = 0
-        for i in range(int(ADCNormalized)):
-		sys.stdout.write("#")
+	print ADCNormalized,
+	if ADCNormalized < 3:
+        	for i in range(int(ADCNormalized*10)):
+			sys.stdout.write("#")
 	time.sleep(wait)
