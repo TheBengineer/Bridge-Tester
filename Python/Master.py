@@ -1,6 +1,11 @@
+#!/usr/bin/python
+
+
 import time, os, pygame, random
 from threading import Thread    ## import
 from pygame.locals import *
+
+from  technical import *
 
 
 pi = 0 # 1 = running on pi, 0 = running in test mode
@@ -26,58 +31,64 @@ class IOThread(Thread):
         Thread.__init__(self)
         self.pressure = 0
         self.distance = 0
-        self.pressureAddress = 0x48 # Address of Pressure ADC
-        self.distanceAddress = 0x49 # Address of Distance ADC
+        self.pressureAddress = 0x49 # Address of Pressure ADC
+        self.distanceAddress = 0x48 # Address of Distance ADC (adddr hooked to vcc)
         self.ledAddresses = [0x60,0x61,0x62,0x63,0x64] # Addresses of LED 7 segment display Drivers
         self.bus = fakeIIC() # just init this in case something ties to use it.
         self.segmentLookup = [63, 6, 91, 79, 102, 109, 125, 7, 127, 111, 119, 124, 57, 94, 121, 113, 123]
         self.pressureArray = []
+        self.lastPressure = 0
+        self.lastDistance = 0
         self.Display = [0]*5
         if pi == 1: # running on a Pi?
-            self.bus = initI2C(self.pressureAddress,self.distanceAddress, self.ledAddresses)
-    def initI2C(pressureA,distanceA):
+            self.bus = self.initI2C(self.pressureAddress,self.distanceAddress)
+    def initI2C(self,pressureA,distanceA):
         bus = smbus.SMBus(1)# Setup IIC
         bus.write_word_data(pressureA,0x01,0x80E0) # Default setup for Pressure
         bus.write_word_data(distanceA,0x01,0x80E0) # Default setup for Distance
         #LEDS don't need setup
         return bus
     def pollpress(self):
-        readingraw = self.bus.read_word_data(self.pressureAddress,0x00)
+        readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
         pressure = readingraw
-        self.pressureArray.append(readingraw)
-        return pressure
+        if pressure < 50000: 
+                self.pressureArray.append([pressure,self.lastDistance,time.time()])#time.time is far away from reading, but should be ok
+                return pressure
+        else:
+                return 0.0
     def setled(self,cellAddress,numberToDisplay):
         self.bus.write_byte_data(cellAddress, 0x44, self.segmentLookup[numberToDisplay])
     def getdist(self):
-        readingraw = self.bus.read_word_data(self.distanceAddress,0x00)
-        distance = readingraw 
+        readingraw = convertReading(self.bus.read_word_data(self.distanceAddress,0x00))
+        distance = (readingraw-1100)/535.0
         return distance
     def run(self):  ## dont need it here
-        error = 0
-        while error == 0:  ## Main thread program using passed variable
-            self.pollpress()
-            self.getdist()
-            print("Pressure",self.pressure)
-            time.sleep(.005)
-            self.count = 0
+        self.error = 0
+        while self.error == 0:  ## Main thread program using passed variable
+            self.lastPressure = self.pollpress()
+            self.lastDistance = self.getdist()
+            #print("Pressure",self.pressure)
+            time.sleep(.0001)
             self.LED = 0
-            while (self.count < 5):
-                self.pollpress()
-                self.setled(self.ledAddresses[self.LED],self.Display[self.LED])
-                self.count += 1
-                self.LED += 1
-                print("LED",self.LED)
-                print("distance",self.distance)
-                time.sleep(.0057)
+            #while (self.count < 5):
+            #    self.pollpress()
+            #    #self.setled(self.ledAddresses[self.LED],self.Display[self.LED])
+            #    self.count += 1
+            #    self.LED += 1
+            #    #print("LED",self.LED)
+            #    #print("distance",self.distance)
+            #    time.sleep(.0057)
 
 
 
-def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd,DataMin,DataMax),color,bordercolor,border):
+def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax),(DYMin,DYMax),color,stroke,bordercolor,border):
     DataLen = DataEnd-DataStart
-    DataHeight = DataMax-DataMin
+    DataHeightX = DXMax-DXMin
+    DataHeightY = DYMax-DYMin
     xscale = (hsize+1)/DataLen
-    xscale2 = (hsize+1)/DataHeight
-    yscale = (vsize+1)/DataHeight
+    xscale2 = (hsize)/DataHeightX
+    yscale = -(vsize)/DataHeightY
+    font = pygame.font.Font("freesansbold.ttf",12)
     if border >= 1:
         pygame.draw.lines(surface,bordercolor,0,((x,y),(x,y+vsize),(x+hsize,y+vsize),(x+hsize,y),(x,y)),border)
     lines = []
@@ -89,9 +100,18 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd,DataMin,DataMa
         if (type(i)== type(float())) or (type(i) == type(int())):
             lines.append((x+(j*xscale),(y+vsize)-(i*yscale)))
         elif len(i) == 2:
-            lines.append(((i[0]*xscale2)+x,y+(i[1]*yscale)))
-    pygame.draw.lines(surface,color,0,lines,1)
-    
+            lines.append((x+((i[0]-DXMin)*xscale2),y+vsize+((i[1]-DYMin)*yscale)))
+    pygame.draw.lines(surface,color,0,lines,stroke)
+    pygame.draw.circle(surface,(255,0,0,128),(int(lines[-1][0]),int(lines[-1][1])),10)
+    surface.blit(font.render("Data Width: "+str(DataHeightX)+" X Scale:"+str(xscale2)+" Y Scale:"+str(yscale),1,(100,255,100)),(40,80))
+    try:
+        surface.blit(font.render("Choords: "+str((float(lines[3][0]),float(lines[3][1]))),1,(100,255,100)),(40,100))
+        surface.blit(font.render("Choords: "+str((float(dataset[3][0]),float(dataset[3][1]))),1,(100,255,100)),(40,120))
+        surface.blit(font.render("Last: "+str((float(lines[-1][0]),float(lines[-1][1]))),1,(100,255,100)),(40,140))
+        surface.blit(font.render("Last: "+str((float(dataset[-1][0]),float(dataset[-1][1]))),1,(100,255,100)),(40,160))
+        surface.blit(font.render("Max: "+str((float(DXMax),float(DXMin),float(DYMax),float(DYMin))),1,(100,255,100)),(40,180))
+    except:
+        pass
     
 
 
@@ -100,7 +120,7 @@ def Main():
     ################ Pygame Init
     pygame.init()
     fpsclock = pygame.time.Clock()
-    WindowSurface = pygame.display.set_mode((640,480))
+    WindowSurface = pygame.display.set_mode((1400,800))
     pygame.display.set_caption("Pygame Test")
     
     
@@ -112,10 +132,14 @@ def Main():
     pygame.draw.line(MouseSurface,(0,255,0),(0,16),(32,16),1)
     
     font = pygame.font.Font("freesansbold.ttf",12)
+    forceFont = pygame.font.Font("freesansbold.ttf",200)
     runProgram = 1
     mousex, mousey = 0,0
-    lines = [0.0,0.0]*100
-    
+    lines = []
+    Load = [0,50000]
+    Dist = [0,50000]
+    tp = 0.0
+    td = 0.0
     while runProgram:
         WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
         # Process events
@@ -128,16 +152,39 @@ def Main():
             if event.type == KEYDOWN:
                 if event.key == K_ESCAPE:
                     runProgram = 0
+                    tclass.error = 1
                     break
-        
-        lines.insert(0,[mousex/6.4,mousey/4.8])
-        lines = lines[:400]
-        Draw_Chart(WindowSurface,10,10,400,200,lines,(0,len(lines),0,100),(255,100,0),(255,255,255),3)
+        readings = 0
+        pressures = 0
+        distances = 0
+        while len(tclass.pressureArray) > 1:
+            tmpAr = tclass.pressureArray.pop()
+            readings += 1
+            pressures += tmpAr[0]
+            distances += tmpAr[1]
+        if readings > 0:
+            tp = pressures/readings #Averages
+            td = distances/readings
+            print tp,td
+            if tp > Load[0]:
+                Load[0] = tp
+            if tp < Load[1]:
+                Load[1] = tp
+            if td > Dist[0]:
+                Dist[0] = td
+            if td < Dist[1]:
+                Dist[1] = td
+            #print Dist, Load
+            lines.append([td,tp])
+        if len(lines)>2:
+            Draw_Chart(WindowSurface,10,200,1380,590,lines,(0,len(lines)),(Dist[1],Dist[0]+.0001),(Load[1],Load[0]+.0001),(255,0,0),5,(255,255,255),3)
         
         #Draw
         WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
+        WindowSurface.blit(forceFont.render(str(tp)[:10],1,(100,255,100)),(10,10))
+        WindowSurface.blit(forceFont.render(str(td)[:5]+"\"",1,(100,255,100)),(700,10))
         pygame.display.update()
-        fpsclock.tick(60)
+        fpsclock.tick(10)
     pygame.quit()
 
 
