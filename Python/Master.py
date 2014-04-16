@@ -44,6 +44,7 @@ class IOThread(Thread):
         self.lastDistance = 0
         self.Display = [0]*5
         self.pga = 1
+        self.fps = 0
         if pi == 1: # running on a Pi?
             self.bus = self.initI2C(self.pressureAddress,self.distanceAddress)
     def initI2C(self,pressureA,distanceA):
@@ -86,12 +87,17 @@ class IOThread(Thread):
         return distance
     def run(self):  ## dont need it here
         self.error = 0
+        self.polls = 0
         while self.error == 0:  ## Main thread program using passed variable
             self.lastPressure = self.pollpress()
             self.lastDistance = self.getdist()
             #print("Pressure",self.pressure)
             time.sleep(.0001)
             self.LED = 0
+            if self.polls%100 == 0:
+                print 100/(time.time()-self.fps)
+                self.fps = time.time()
+            self.polls+=1
             #while (self.count < 5):
             #    self.pollpress()
             #    #self.setled(self.ledAddresses[self.LED],self.Display[self.LED])
@@ -117,23 +123,17 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     if border >= 1:
         pygame.draw.lines(surface,bordercolor,0,((x,y),(x,y+vsize),(x+hsize,y+vsize),(x+hsize,y),(x,y)),border)
     lines = []
-    if DataLen > hsize: #throw fit
-        print "Not enough Graph Space. Impement a thingy."
-        return
     for j in range(DataLen):
         i = dataset[j+DataStart]
-        if (type(i)== type(float())) or (type(i) == type(int())):
-            lines.append((x+(j*xscale),(y+vsize)-(i*yscale)))
-        elif len(i) == 2:
-            if i[1] > maxVal:
-                maxVal = i[1]
-                maxInd = j
-            lines.append((x+((i[0]-DXMin)*xscale2),y+vsize+((i[1]-DYMin)*yscale)))
+        if i[1] > maxVal:
+            maxVal = i[1]
+            maxInd = j
+        lines.append((x+((i[0]-DXMin)*xscale2),y+vsize+((i[1]-DYMin)*yscale)))
     pygame.draw.lines(surface,color,0,lines,stroke)
     pygame.draw.circle(surface,(0,0,255,128),(int(lines[-1][0]),int(lines[-1][1])),10)
     surface.blit(font.render("Data Width: "+str(DataHeightX)+" X Scale:"+str(xscale2)+" Y Scale:"+str(yscale),1,(100,255,100)),(40,380))
     px,py = (x+((dataset[maxInd][0]-DXMin)*xscale2),y+vsize+((dataset[maxInd][1]-DYMin)*yscale))
-    tag = [(px+20,py),(px,py-20),(px-20,py),(px,py+20),(px+20,py),]
+    tag = [(px+20,py),(px,py-20),(px-20,py),(px,py+20),(px+20,py)]
     if px > hsize/2:
         tx,ty = px-220,py
         pygame.draw.lines(surface,(0,255,0),0,((px-20,py),(tx+150,ty)),2)
@@ -144,7 +144,7 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     pygame.draw.lines(surface,(0,255,0),0,tag,2)
     pygame.draw.lines(surface,(0,255,0),0,tag2,2)
     pygame.draw.lines(surface,(0,255,0),0,((tx,ty-20),(tx-130,ty-20)),2)
-    surface.blit(MLfont.render("{0:.2f} LB".format(DYMax),1,(0,255,0)),(tx-130,ty-14))
+    surface.blit(MLfont.render("{0:.2f} LB".format(dataset[maxInd][1]),1,(0,255,0)),(tx-130,ty-14))
     
     try:
         surface.blit(font.render("Choords: "+str((float(lines[3][0]),float(lines[3][1]))),1,(100,255,100)),(40,400))
@@ -162,9 +162,9 @@ def Main():
     ################ Pygame Init
     pygame.init()
     fpsclock = pygame.time.Clock()
-    WindowSurface = pygame.display.set_mode((1400,800))
+    WindowSurface = pygame.display.set_mode((1918,1078))#,pygame.FULLSCREEN)
     pygame.display.set_caption("Pygame Test")
-    
+    fps = 0
     
     ################# Pygame declarations
     #CustomImage = pygame.image.load("test.png")
@@ -198,13 +198,13 @@ def Main():
                     tclass.error = 1
                     break
                 if event.key == K_UP:
-                    tclass.pga = clamp(tclass.pga+1,1,5)
+                    tclass.pga = clamp(tclass.pga+1,2,5)
                     setting = tclass.pgaSetting +(tclass.pga*2)
                     print hex(setting)
                     #tclass.bus.write_word_data(tclass.distanceAddress,0x01,0x0000)
                     tclass.bus.write_word_data(tclass.pressureAddress,0x01,setting)
                 if event.key == K_DOWN:
-                    tclass.pga = clamp(tclass.pga-1,1,5)
+                    tclass.pga = clamp(tclass.pga-1,2,5)
                     setting = tclass.pgaSetting +(tclass.pga*2)
                     print hex(setting)
                     #tclass.bus.write_word_data(tclass.distanceAddress,0x01,0x0000)
@@ -213,7 +213,8 @@ def Main():
                     lines = []
                     Load = [0,50000]
                     Dist = [0,50000]
-                    tclass.DTare = tclass.lastDistance
+                    tclass.DTare = tclass.lastDistance+tclass.DTare
+                    tclass.PTare = tclass.lastPressure+tclass.PTare
                     tp = 0.0
                     td = 0.0
                     time.sleep(.1)
@@ -221,40 +222,45 @@ def Main():
                         tmpAr = tclass.pressureArray.pop() # clear saved pressures
                 if event.key == K_LEFT:
                     print td
-        readings = 0
-        pressures = 0
-        maxPressure = 0
-        distances = 0
-        while len(tclass.pressureArray) > 1:
-            tmpAr = tclass.pressureArray.pop()
-            readings += 1
-            pressures += tmpAr[0]
-            distances += tmpAr[1]
-            maxPressure = max(tmpAr[0],maxPressure)
-        if readings > 0:
-            #tp = pressures/readings #Averages
-            tp = maxPressure #Max
-            td = distances/readings
-            if tp > Load[0]:
-                Load[0] = tp
-            if tp < Load[1]:
-                Load[1] = tp
-            if td > Dist[0]:
-                Dist[0] = td
-            if td < Dist[1]:
-                Dist[1] = td
-            #print Dist, Load
-            lines.append([td,tp])
+        while len(tclass.pressureArray) > 51:
+            readings = 0
+            pressures = 0
+            maxPressure = 0
+            distances = 0
+            for i in range(50):
+                tmpAr = tclass.pressureArray.pop(0)
+                readings += 1
+                pressures += tmpAr[0]
+                distances += tmpAr[1]
+                maxPressure = max(tmpAr[0],maxPressure)
+                if readings > 0:
+                    tp = pressures/readings #Averages
+                    #tp = maxPressure #Max
+                    td = distances/readings
+                    if tp > Load[0]:
+                        Load[0] = tp
+                    if tp < Load[1]:
+                        Load[1] = tp
+                    if td > Dist[0]:
+                        Dist[0] = td
+                    if td < Dist[1]:
+                        Dist[1] = td
+                    #print Dist, Load
+                lines.append([td,tp])
         if len(lines)>2:
-            Draw_Chart(WindowSurface,10,200,1380,590,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),5,(255,255,255),3)
+            Draw_Chart(WindowSurface,10,280,1380,750,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),5,(255,255,255),3)
         #Draw
         WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
         WindowSurface.blit(forceFont.render(str(tp)[:5],1,(100,255,100)),(10,10))
         WindowSurface.blit(forceFont.render(str(td)[:5]+"\"",1,(100,255,100)),(700,10))
         #WindowSurface.blit(forceFont.render(str(hex(int(td*535)+1100))[:6]+"\"",1,(100,255,100)),(700,10))
         WindowSurface.blit(font.render("Max Load: "+str(60000/(2**tclass.pga))[:5]+"",1,(100,255,100)),(600,10))
+        WindowSurface.blit(font.render("FPS: {0:.1f}".format(1/(time.time()-fps)),1,(100,255,100)),(600,30))
+        fps = time.time()
         pygame.display.update()
-        fpsclock.tick(10)
+        fpsclock.tick(60)
+        
+        
     pygame.quit()
 
 
