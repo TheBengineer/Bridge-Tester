@@ -92,12 +92,12 @@ class IOThread(Thread):
             self.lastPressure = self.pollpress()
             self.lastDistance = self.getdist()
             #print("Pressure",self.pressure)
-            time.sleep(.0001)
-            self.LED = 0
-            if self.polls%100 == 0:
-                print 100/(time.time()-self.fps)
-                self.fps = time.time()
-            self.polls+=1
+            time.sleep(.01)
+            #self.LED = 0
+            #if self.polls%100 == 0:
+            #    print 100/(time.time()-self.fps)
+            #    self.fps = time.time()
+            #self.polls+=1
             #while (self.count < 5):
             #    self.pollpress()
             #    #self.setled(self.ledAddresses[self.LED],self.Display[self.LED])
