@@ -31,6 +31,8 @@ class IOThread(Thread):
         Thread.__init__(self)
         self.pressure = 0
         self.distance = 0
+        self.PTare = 0
+        self.DTare = 0
         self.pgaSetting = 0x8060
         self.pressureAddress = 0x49 # Address of Pressure ADC
         self.distanceAddress = 0x48 # Address of Distance ADC (adddr hooked to vcc)
@@ -69,6 +71,7 @@ class IOThread(Thread):
                 # self.bus.write_word_data(self.pressureAddress,0x01,self.pgaSetting+4) # Gain of 4
             # readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
         pressure = readingraw/(2.0**self.pga)
+        pressure -= self.PTare
         if pressure < 50000: 
                 self.pressureArray.append([pressure,self.lastDistance,time.time()])#time.time is far away from reading, but should be ok
                 return pressure
@@ -79,6 +82,7 @@ class IOThread(Thread):
     def getdist(self):
         readingraw = convertReading(self.bus.read_word_data(self.distanceAddress,0x00))
         distance = (readingraw-1200)/1200.0
+        distance -= self.DTare
         return distance
     def run(self):  ## dont need it here
         self.error = 0
@@ -105,8 +109,11 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     DataHeightY = DYMax-DYMin
     xscale = (hsize+1)/DataLen
     xscale2 = (hsize)/DataHeightX
-    yscale = -(vsize)/DataHeightY
+    yscale = -(vsize-60)/DataHeightY
+    maxVal = 0
+    maxInd = 0
     font = pygame.font.Font("freesansbold.ttf",12)
+    MLfont = pygame.font.Font("freesansbold.ttf",20)
     if border >= 1:
         pygame.draw.lines(surface,bordercolor,0,((x,y),(x,y+vsize),(x+hsize,y+vsize),(x+hsize,y),(x,y)),border)
     lines = []
@@ -118,16 +125,27 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
         if (type(i)== type(float())) or (type(i) == type(int())):
             lines.append((x+(j*xscale),(y+vsize)-(i*yscale)))
         elif len(i) == 2:
+            if i[1] > maxVal:
+                maxVal = i[1]
+                maxInd = j
             lines.append((x+((i[0]-DXMin)*xscale2),y+vsize+((i[1]-DYMin)*yscale)))
     pygame.draw.lines(surface,color,0,lines,stroke)
     pygame.draw.circle(surface,(0,0,255,128),(int(lines[-1][0]),int(lines[-1][1])),10)
-    surface.blit(font.render("Data Width: "+str(DataHeightX)+" X Scale:"+str(xscale2)+" Y Scale:"+str(yscale),1,(100,255,100)),(40,80))
+    surface.blit(font.render("Data Width: "+str(DataHeightX)+" X Scale:"+str(xscale2)+" Y Scale:"+str(yscale),1,(100,255,100)),(40,380))
+    px,py = (x+((dataset[maxInd][0]-DXMin)*xscale2),y+vsize+((dataset[maxInd][1]-DYMin)*yscale))
+    tag = [(px+20,py),(px,py-20),(px-20,py),(px,py+20),(px+20,py),(px+70,py)]
+    tx,ty = px+170,py
+    tag2 = [(tx+100,ty),(tx+80,ty-20),(tx-80,ty-20),(tx-100,ty),(tx-80,ty+20),(tx+80,ty+20),(tx+100,ty)]
+    pygame.draw.lines(surface,(0,255,0),0,tag,2)
+    pygame.draw.lines(surface,(0,255,0),0,tag2,2)
+    surface.blit(MLfont.render("Max Load: "+str(DYMax),1,(100,255,100)),(tx-80,ty))
+    
     try:
-        surface.blit(font.render("Choords: "+str((float(lines[3][0]),float(lines[3][1]))),1,(100,255,100)),(40,100))
-        surface.blit(font.render("Choords: "+str((float(dataset[3][0]),float(dataset[3][1]))),1,(100,255,100)),(40,120))
-        surface.blit(font.render("Last: "+str((float(lines[-1][0]),float(lines[-1][1]))),1,(100,255,100)),(40,140))
-        surface.blit(font.render("Last: "+str((float(dataset[-1][0]),float(dataset[-1][1]))),1,(100,255,100)),(40,160))
-        surface.blit(font.render("Max: "+str((float(DXMax),float(DXMin),float(DYMax),float(DYMin))),1,(100,255,100)),(40,180))
+        surface.blit(font.render("Choords: "+str((float(lines[3][0]),float(lines[3][1]))),1,(100,255,100)),(40,400))
+        surface.blit(font.render("Choords: "+str((float(dataset[3][0]),float(dataset[3][1]))),1,(100,255,100)),(40,420))
+        surface.blit(font.render("Last: "+str((float(lines[-1][0]),float(lines[-1][1]))),1,(100,255,100)),(40,440))
+        surface.blit(font.render("Last: "+str((float(dataset[-1][0]),float(dataset[-1][1]))),1,(100,255,100)),(40,460))
+        surface.blit(font.render("Max: "+str((float(DXMax),float(DXMin),float(DYMax),float(DYMin))),1,(100,255,100)),(40,480))
     except:
         pass
     
@@ -189,6 +207,8 @@ def Main():
                     lines = []
                     Load = [0,50000]
                     Dist = [0,50000]
+                    tclass.DTare = tclass.lastDistance
+                    print tclass.DTare
                     tp = 0.0
                     td = 0.0
                 if event.key == K_LEFT:
@@ -215,8 +235,7 @@ def Main():
             #print Dist, Load
             lines.append([td,tp])
         if len(lines)>2:
-            Draw_Chart(WindowSurface,10,200,1380,590,lines,(0,len(lines)),(Dist[1],Dist[0]+.0001),(Load[1],Load[0]+.0001),(255,0,0),5,(255,255,255),3)
-        
+            Draw_Chart(WindowSurface,10,200,1380,590,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+1,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),5,(255,255,255),3)
         #Draw
         WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
         WindowSurface.blit(forceFont.render(str(tp)[:5],1,(100,255,100)),(10,10))
