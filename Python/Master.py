@@ -113,7 +113,7 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     maxVal = 0
     maxInd = 0
     font = pygame.font.Font("freesansbold.ttf",12)
-    MLfont = pygame.font.Font("freesansbold.ttf",20)
+    MLfont = pygame.font.Font("freesansbold.ttf",30)
     if border >= 1:
         pygame.draw.lines(surface,bordercolor,0,((x,y),(x,y+vsize),(x+hsize,y+vsize),(x+hsize,y),(x,y)),border)
     lines = []
@@ -138,7 +138,7 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     tag2 = [(tx+100,ty),(tx+80,ty-20),(tx-80,ty-20),(tx-100,ty),(tx-80,ty+20),(tx+80,ty+20),(tx+100,ty)]
     pygame.draw.lines(surface,(0,255,0),0,tag,2)
     pygame.draw.lines(surface,(0,255,0),0,tag2,2)
-    surface.blit(MLfont.render("Max Load: "+str(DYMax),1,(100,255,100)),(tx-80,ty))
+    surface.blit(MLfont.render("{0:.2f} LB".format(DYMax),1,(0,255,0)),(tx-80,ty-14))
     
     try:
         surface.blit(font.render("Choords: "+str((float(lines[3][0]),float(lines[3][1]))),1,(100,255,100)),(40,400))
