@@ -162,7 +162,7 @@ def Main():
     ################ Pygame Init
     pygame.init()
     fpsclock = pygame.time.Clock()
-    WindowSurface = pygame.display.set_mode((1918,1078))#,pygame.FULLSCREEN)
+    WindowSurface = pygame.display.set_mode((1024,768)),pygame.FULLSCREEN)
     pygame.display.set_caption("Pygame Test")
     fps = 0
     
