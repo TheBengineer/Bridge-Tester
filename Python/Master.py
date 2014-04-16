@@ -162,7 +162,7 @@ def Main():
     ################ Pygame Init
     pygame.init()
     fpsclock = pygame.time.Clock()
-    WindowSurface = pygame.display.set_mode((1024,576),pygame.FULLSCREEN)
+    WindowSurface = pygame.display.set_mode((1918,1078))#,pygame.FULLSCREEN)
     pygame.display.set_caption("Pygame Test")
     fps = 0
     
@@ -183,8 +183,12 @@ def Main():
     tp = 0.0
     td = 0.0
     PGA = 0
+    f = open("times.csv","w")
     while runProgram:
-        #WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
+        times = []
+        times.append(time.time())
+        WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
+        times.append(time.time())
         # Process events
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -222,6 +226,7 @@ def Main():
                         tmpAr = tclass.pressureArray.pop() # clear saved pressures
                 if event.key == K_LEFT:
                     print td
+        times.append(time.time())
         while len(tclass.pressureArray) > 51:
             readings = 0
             pressures = 0
@@ -247,20 +252,24 @@ def Main():
                         Dist[1] = td
                     #print Dist, Load
                 lines.append([td,tp])
+        times.append(time.time())
         if len(lines)>2:
-            Draw_Chart(WindowSurface,10,180,1000,350,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),5,(255,255,255),3)
+            Draw_Chart(WindowSurface,10,220,1380,800,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),5,(255,255,255),3)
+        times.append(time.time())
         #Draw
         WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
         WindowSurface.blit(forceFont.render(str(tp)[:5],1,(100,255,100)),(10,10))
         WindowSurface.blit(forceFont.render(str(td)[:5]+"\"",1,(100,255,100)),(700,10))
         #WindowSurface.blit(forceFont.render(str(hex(int(td*535)+1100))[:6]+"\"",1,(100,255,100)),(700,10))
         WindowSurface.blit(font.render("Max Load: "+str(60000/(2**tclass.pga))[:5]+"",1,(100,255,100)),(600,10))
-        WindowSurface.blit(font.render("FPS: {0:.1f}".format(1/(time.time()-fps)),1,(100,255,100)),(600,30))
-        fps = time.time()
+        #WindowSurface.blit(font.render("FPS: {0:.1f}".format(1/(time.time()-fps)),1,(100,255,100)),(600,30))
+        times.append(time.time())
+        tgd = []
+        for i in range(1,len(times)):
+            tgd.append((i,times[i]-times[i-1]))
+        #Draw_Chart(WindowSurface,10,850,100,800,tgd,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),5,(255,255,255),3)
         pygame.display.update()
-        fpsclock.tick(60)
-        
-        
+    f.close()
     pygame.quit()
 
 
