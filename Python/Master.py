@@ -133,12 +133,18 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     pygame.draw.circle(surface,(0,0,255,128),(int(lines[-1][0]),int(lines[-1][1])),10)
     surface.blit(font.render("Data Width: "+str(DataHeightX)+" X Scale:"+str(xscale2)+" Y Scale:"+str(yscale),1,(100,255,100)),(40,380))
     px,py = (x+((dataset[maxInd][0]-DXMin)*xscale2),y+vsize+((dataset[maxInd][1]-DYMin)*yscale))
-    tag = [(px+20,py),(px,py-20),(px-20,py),(px,py+20),(px+20,py),(px+70,py)]
-    tx,ty = px+170,py
-    tag2 = [(tx+100,ty),(tx+80,ty-20),(tx-80,ty-20),(tx-100,ty),(tx-80,ty+20),(tx+80,ty+20),(tx+100,ty)]
+    tag = [(px+20,py),(px,py-20),(px-20,py),(px,py+20),(px+20,py),]
+    if px > hsize/2:
+        tx,ty = px-220,py
+        pygame.draw.lines(surface,(0,255,0),0,((px-20,py),(tx+150,ty)),2)
+    else:
+        tx,ty = px+220,py
+        pygame.draw.lines(surface,(0,255,0),0,((px+20,py),(tx-150,ty)),2)
+    tag2 = [(tx+150,ty),(tx+130,ty-20),(tx-130,ty-20),(tx-150,ty),(tx-130,ty+20),(tx+130,ty+20),(tx+150,ty)]
     pygame.draw.lines(surface,(0,255,0),0,tag,2)
     pygame.draw.lines(surface,(0,255,0),0,tag2,2)
-    surface.blit(MLfont.render("{0:.2f} LB".format(DYMax),1,(0,255,0)),(tx-80,ty-14))
+    pygame.draw.lines(surface,(0,255,0),0,((tx,ty-20),(tx-130,ty-20)),2)
+    surface.blit(MLfont.render("{0:.2f} LB".format(DYMax),1,(0,255,0)),(tx-130,ty-14))
     
     try:
         surface.blit(font.render("Choords: "+str((float(lines[3][0]),float(lines[3][1]))),1,(100,255,100)),(40,400))
@@ -208,21 +214,26 @@ def Main():
                     Load = [0,50000]
                     Dist = [0,50000]
                     tclass.DTare = tclass.lastDistance
-                    print tclass.DTare
                     tp = 0.0
                     td = 0.0
+                    time.sleep(.1)
+                    while len(tclass.pressureArray) > 1:
+                        tmpAr = tclass.pressureArray.pop() # clear saved pressures
                 if event.key == K_LEFT:
                     print td
         readings = 0
         pressures = 0
+        maxPressure = 0
         distances = 0
         while len(tclass.pressureArray) > 1:
             tmpAr = tclass.pressureArray.pop()
             readings += 1
             pressures += tmpAr[0]
             distances += tmpAr[1]
+            maxPressure = max(tmpAr[0],maxPressure)
         if readings > 0:
-            tp = pressures/readings #Averages
+            #tp = pressures/readings #Averages
+            tp = maxPressure #Max
             td = distances/readings
             if tp > Load[0]:
                 Load[0] = tp
@@ -235,7 +246,7 @@ def Main():
             #print Dist, Load
             lines.append([td,tp])
         if len(lines)>2:
-            Draw_Chart(WindowSurface,10,200,1380,590,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+1,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),5,(255,255,255),3)
+            Draw_Chart(WindowSurface,10,200,1380,590,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),5,(255,255,255),3)
         #Draw
         WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
         WindowSurface.blit(forceFont.render(str(tp)[:5],1,(100,255,100)),(10,10))
