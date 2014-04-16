@@ -184,7 +184,7 @@ def Main():
     td = 0.0
     PGA = 0
     while runProgram:
-        WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
+        #WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
         # Process events
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -248,7 +248,7 @@ def Main():
                     #print Dist, Load
                 lines.append([td,tp])
         if len(lines)>2:
-            Draw_Chart(WindowSurface,10,280,1380,750,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),5,(255,255,255),3)
+            Draw_Chart(WindowSurface,10,180,1000,350,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),5,(255,255,255),3)
         #Draw
         WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
         WindowSurface.blit(forceFont.render(str(tp)[:5],1,(100,255,100)),(10,10))
