@@ -241,12 +241,12 @@ def Main():
                 if event.key == K_LEFT:
                     print td
         times.append(time.time())  #################
-        while len(tclass.pressureArray) > 11:
+        while len(tclass.pressureArray) > 51:
             readings = 0
             pressures = 0
             maxPressure = 0
             distances = 0
-            for i in range(10):
+            for i in range(50):
                 tmpAr = tclass.pressureArray.pop(0)
                 readings += 1
                 pressures += tmpAr[0]
