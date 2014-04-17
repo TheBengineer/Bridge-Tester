@@ -109,7 +109,7 @@ class IOThread(Thread):
 
 
 
-def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax),(DYMin,DYMax),color,stroke,bordercolor,border):
+def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax),(DYMin,DYMax),color,stroke,bordercolor,border,stringFormat):
     DataLen = DataEnd-DataStart
     DataHeightX = DXMax-DXMin
     DataHeightY = DYMax-DYMin
@@ -144,7 +144,7 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     pygame.draw.lines(surface,(0,255,0),0,tag,2)
     pygame.draw.lines(surface,(0,255,0),0,tag2,2)
     pygame.draw.lines(surface,(0,255,0),0,((tx,ty-20),(tx-130,ty-20)),2)
-    surface.blit(MLfont.render("{0:.2f} LB".format(dataset[maxInd][1]),1,(0,255,0)),(tx-130,ty-14))
+    surface.blit(MLfont.render(stringFormat.format(dataset[maxInd][1]),1,(0,255,0)),(tx-130,ty-14))
     
     try:
         surface.blit(font.render("Choords: "+str((float(lines[3][0]),float(lines[3][1]))),1,(100,255,100)),(40,400))
@@ -183,7 +183,7 @@ def Main():
     tp = 0.0
     td = 0.0
     PGA = 0
-    f = open("times.csv","w")
+    f = open("/home/ben/Bridge_Tester/Python/times.csv","w")
     while runProgram:
         times = []
         times.append(time.time())
@@ -227,34 +227,34 @@ def Main():
                 if event.key == K_LEFT:
                     print td
         times.append(time.time())
-        while len(tclass.pressureArray) > 51:
+        while len(tclass.pressureArray) > 11:
             readings = 0
             pressures = 0
             maxPressure = 0
             distances = 0
-            for i in range(50):
+            for i in range(10):
                 tmpAr = tclass.pressureArray.pop(0)
                 readings += 1
                 pressures += tmpAr[0]
                 distances += tmpAr[1]
                 maxPressure = max(tmpAr[0],maxPressure)
-                if readings > 0:
-                    tp = pressures/readings #Averages
-                    #tp = maxPressure #Max
-                    td = distances/readings
-                    if tp > Load[0]:
-                        Load[0] = tp
-                    if tp < Load[1]:
-                        Load[1] = tp
-                    if td > Dist[0]:
-                        Dist[0] = td
-                    if td < Dist[1]:
-                        Dist[1] = td
-                    #print Dist, Load
-                lines.append([td,tp])
+            if readings > 0:
+                tp = pressures/readings #Averages
+                #tp = maxPressure #Max
+                td = distances/readings
+                if tp > Load[0]:
+                    Load[0] = tp
+                if tp < Load[1]:
+                    Load[1] = tp
+                if td > Dist[0]:
+                    Dist[0] = td
+                if td < Dist[1]:
+                    Dist[1] = td
+                #print Dist, Load
+            lines.append([td,tp])
         times.append(time.time())
         if len(lines)>2:
-            Draw_Chart(WindowSurface,10,220,1380,800,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),5,(255,255,255),3)
+            Draw_Chart(WindowSurface,10,220,1380,800,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),5,(255,255,255),3,"{0:.2f} LB")
         times.append(time.time())
         #Draw
         WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
@@ -267,7 +267,8 @@ def Main():
         tgd = []
         for i in range(1,len(times)):
             tgd.append((i,times[i]-times[i-1]))
-        #Draw_Chart(WindowSurface,10,850,100,800,tgd,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),5,(255,255,255),3)
+        Draw_Chart(WindowSurface,1400,220,400,800,tgd,(0,len(tgd)),(1,6),(0,.1),(0,255,0),1,(255,255,255),3,"{0:.6f}")
+        WindowSurface.blit(font.render("Lines: "+str(len(lines)),1,(100,255,100)),(1600,240))
         pygame.display.update()
     f.close()
     pygame.quit()
