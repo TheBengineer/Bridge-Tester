@@ -92,6 +92,7 @@ class IOThread(Thread):
         while self.error == 0:  ## Main thread program using passed variable
             self.lastPressure = self.pollpress()
             #self.lastDistance = self.getdist()
+            self.lastDistance = time.time()-self.lasttime
             #print("Pressure",self.pressure)
             #time.sleep(.001)
             #self.LED = 0
@@ -198,6 +199,7 @@ def Main():
     PGA = 0
     global timev
     times = []
+    charttimes = []
     f = open("/home/ben/Bridge_Tester/Python/times.csv","w")
     while runProgram:
         times.append(time.time())  #################
@@ -253,8 +255,8 @@ def Main():
                 distances += tmpAr[1]
                 maxPressure = max(tmpAr[0],maxPressure)
             if readings > 0:
-                #tp = pressures/readings #Averages
-                tp = maxPressure #Max   
+                tp = pressures/readings #Averages
+                #tp = maxPressure #Max   
                 td = distances/readings
                 if tp > Load[0]:
                     Load[0] = tp
@@ -291,6 +293,7 @@ def Main():
         #Draw_Chart(WindowSurface,1400,220,400,800,ctgd,(0,len(ctgd)),(1,len(ctgd)),(0,.1),(0,0,255),1,(255,255,255),3,"{0:.6f}",MLfont)
         WindowSurface.blit(font.render("Lines: "+str(len(lines)),1,(100,255,100)),(1600,240))
         WindowSurface.blit(font.render("Polling Frequency: "+str(int(tclass.fps)),1,(100,255,100)),(1600,260))
+        WindowSurface.blit(MLfont.render("Min: "+str(Load[1]),1,(100,255,100)),(10,240))
         times.append(time.time())  #################
         pygame.display.update()
         times.append(time.time())  #################
