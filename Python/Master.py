@@ -43,7 +43,7 @@ class IOThread(Thread):
         self.lastPressure = 0
         self.lastDistance = 0
         self.Display = [0]*5
-        self.pga = 1
+        self.pga = 2
         self.fps = 0
         self.lasttime = time.time()
         if pi == 1: # running on a Pi?
@@ -197,6 +197,10 @@ def Main():
     tp = 0.0
     td = 0.0
     PGA = 0
+    setting = tclass.pgaSetting +(tclass.pga*2)
+    print hex(setting)
+    #tclass.bus.write_word_data(tclass.distanceAddress,0x01,0x0000)
+    tclass.bus.write_word_data(tclass.pressureAddress,0x01,setting)
     global timev
     times = []
     charttimes = []
@@ -295,6 +299,7 @@ def Main():
         WindowSurface.blit(font.render("Lines: "+str(len(lines)),1,(100,255,100)),(1600,240))
         WindowSurface.blit(font.render("Polling Frequency: "+str(int(tclass.fps)),1,(100,255,100)),(1600,260))
         WindowSurface.blit(MLfont.render("Min: "+str(Load[1]),1,(100,255,100)),(10,240))
+        WindowSurface.blit(MLfont.render("Pressure Tare: "+str(tclass.PTare),1,(100,255,100)),(10,270))
         times.append(time.time())  #################
         pygame.display.update()
         times.append(time.time())  #################
