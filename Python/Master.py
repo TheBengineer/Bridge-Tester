@@ -45,6 +45,7 @@ class IOThread(Thread):
         self.Display = [0]*5
         self.pga = 1
         self.fps = 0
+        self.lasttime = time.time()
         if pi == 1: # running on a Pi?
             self.bus = self.initI2C(self.pressureAddress,self.distanceAddress)
     def initI2C(self,pressureA,distanceA):
@@ -71,7 +72,7 @@ class IOThread(Thread):
                 # self.pga = 4
                 # self.bus.write_word_data(self.pressureAddress,0x01,self.pgaSetting+4) # Gain of 4
             # readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
-        pressure = readingraw/(2.0**self.pga)
+        pressure = (readingraw*3.19)/(2.0**self.pga)
         pressure -= self.PTare
         if pressure < 50000: 
                 self.pressureArray.append([pressure,self.lastDistance,time.time()])#time.time is far away from reading, but should be ok
@@ -92,12 +93,12 @@ class IOThread(Thread):
             self.lastPressure = self.pollpress()
             self.lastDistance = self.getdist()
             #print("Pressure",self.pressure)
-            time.sleep(.01)
+            time.sleep(.001)
             #self.LED = 0
-            #if self.polls%100 == 0:
-            #    print 100/(time.time()-self.fps)
-            #    self.fps = time.time()
-            #self.polls+=1
+            if self.polls%100 == 0:
+                self.fps = 100/(time.time()-self.lasttime)
+                self.lasttime = time.time()
+            self.polls+=1
             #while (self.count < 5):
             #    self.pollpress()
             #    #self.setled(self.ledAddresses[self.LED],self.Display[self.LED])
@@ -118,8 +119,10 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     yscale = -(vsize-60)/DataHeightY
     maxVal = 0
     maxInd = 0
+    t = time.time()
     font = pygame.font.Font("freesansbold.ttf",12)
     MLfont = pygame.font.Font("freesansbold.ttf",30)
+    print 1/(time.time()-t)
     if border >= 1:
         pygame.draw.lines(surface,bordercolor,0,((x,y),(x,y+vsize),(x+hsize,y+vsize),(x+hsize,y),(x,y)),border)
     lines = []
@@ -175,6 +178,7 @@ def Main():
     
     font = pygame.font.Font("freesansbold.ttf",12)
     forceFont = pygame.font.Font("freesansbold.ttf",200)
+    MLfont = pygame.font.Font("freesansbold.ttf",30)
     runProgram = 1
     mousex, mousey = 0,0
     lines = []
@@ -183,9 +187,9 @@ def Main():
     tp = 0.0
     td = 0.0
     PGA = 0
+    times = []
     f = open("/home/ben/Bridge_Tester/Python/times.csv","w")
     while runProgram:
-        times = []
         times.append(time.time())
         WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
         times.append(time.time())
@@ -267,9 +271,14 @@ def Main():
         tgd = []
         for i in range(1,len(times)):
             tgd.append((i,times[i]-times[i-1]))
-        Draw_Chart(WindowSurface,1400,220,400,800,tgd,(0,len(tgd)),(1,6),(0,.1),(0,255,0),1,(255,255,255),3,"{0:.6f}")
+        times = []
+        times.append(time.time())
+        Draw_Chart(WindowSurface,1400,220,400,800,tgd,(0,len(tgd)),(1,8),(0,.1),(0,255,0),1,(255,255,255),3,"{0:.6f}")
         WindowSurface.blit(font.render("Lines: "+str(len(lines)),1,(100,255,100)),(1600,240))
+        WindowSurface.blit(font.render("Polling Frequency: "+str(int(tclass.fps)),1,(100,255,100)),(1600,260))
+        times.append(time.time())
         pygame.display.update()
+        times.append(time.time())
     f.close()
     pygame.quit()
 
@@ -277,7 +286,6 @@ def Main():
 
 tclass = IOThread() ## create instance
 tclass.start() ## start class running
-
 
 
 Main()
