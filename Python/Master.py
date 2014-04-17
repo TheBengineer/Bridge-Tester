@@ -110,7 +110,7 @@ class IOThread(Thread):
 
 
 
-def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax),(DYMin,DYMax),color,stroke,bordercolor,border,stringFormat):
+def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax),(DYMin,DYMax),color,stroke,bordercolor,border,stringFormat,MLfont):
     global timev
     times = [timev]
     times.append(time.time())  #################
@@ -269,12 +269,12 @@ def Main():
         times.append(time.time())  #################
         if len(lines)>2:
             timev = time.time()
-            charttimes = Draw_Chart(WindowSurface,10,220,1380,800,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),1,(255,255,255),3,"{0:.2f} LB")
+            charttimes = Draw_Chart(WindowSurface,10,220,1380,800,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),1,(255,255,255),3,"{0:.2f} LB",MLfont)
         times.append(time.time())  #################
         #Draw
-        WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
-        WindowSurface.blit(forceFont.render(str(tp)[:5],1,(100,255,100)),(10,10))
-        WindowSurface.blit(forceFont.render(str(td)[:5]+"\"",1,(100,255,100)),(700,10))
+        #WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
+        WindowSurface.blit(forceFont.render("{0:.1f} LB".format(tp),1,(100,255,100)),(10,10))
+        WindowSurface.blit(forceFont.render("{0:.3f}\"".format(td),1,(100,255,100)),(1100,10))
         #WindowSurface.blit(forceFont.render(str(hex(int(td*535)+1100))[:6]+"\"",1,(100,255,100)),(700,10))
         WindowSurface.blit(font.render("Max Load: "+str(60000/(2**tclass.pga))[:5]+"",1,(100,255,100)),(600,10))
         #WindowSurface.blit(font.render("FPS: {0:.1f}".format(1/(time.time()-fps)),1,(100,255,100)),(600,30))
@@ -287,8 +287,8 @@ def Main():
             ctgd.append((i,charttimes[i]-charttimes[i-1]))
         times = []
         times.append(time.time())  #################
-        Draw_Chart(WindowSurface,1400,220,400,800,tgd,(0,len(tgd)),(1,len(tgd)),(0,.1),(0,255,0),1,(255,255,255),3,"{0:.6f}")
-        Draw_Chart(WindowSurface,1400,220,400,800,ctgd,(0,len(ctgd)),(1,len(ctgd)),(0,.1),(0,0,255),1,(255,255,255),3,"{0:.6f}")
+        Draw_Chart(WindowSurface,1400,220,400,800,tgd,(0,len(tgd)),(1,len(tgd)),(0,.1),(0,255,0),1,(255,255,255),3,"{0:.6f}",MLfont)
+        Draw_Chart(WindowSurface,1400,220,400,800,ctgd,(0,len(ctgd)),(1,len(ctgd)),(0,.1),(0,0,255),1,(255,255,255),3,"{0:.6f}",MLfont)
         WindowSurface.blit(font.render("Lines: "+str(len(lines)),1,(100,255,100)),(1600,240))
         WindowSurface.blit(font.render("Polling Frequency: "+str(int(tclass.fps)),1,(100,255,100)),(1600,260))
         times.append(time.time())  #################
