@@ -111,6 +111,9 @@ class IOThread(Thread):
 
 
 def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax),(DYMin,DYMax),color,stroke,bordercolor,border,stringFormat):
+    global timev
+    times = [timev]
+    times.append(time.time())  #################
     DataLen = DataEnd-DataStart
     DataHeightX = DXMax-DXMin
     DataHeightY = DYMax-DYMin
@@ -119,12 +122,12 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     yscale = -(vsize-60)/DataHeightY
     maxVal = 0
     maxInd = 0
-    t = time.time()
-    font = pygame.font.Font("freesansbold.ttf",12)
+    times.append(time.time())  #################
     MLfont = pygame.font.Font("freesansbold.ttf",30)
-    print 1/(time.time()-t)
+    times.append(time.time())  #################
     if border >= 1:
         pygame.draw.lines(surface,bordercolor,0,((x,y),(x,y+vsize),(x+hsize,y+vsize),(x+hsize,y),(x,y)),border)
+    times.append(time.time())  #################
     lines = []
     for j in range(DataLen):
         i = dataset[j+DataStart]
@@ -132,23 +135,28 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
             maxVal = i[1]
             maxInd = j
         lines.append((x+((i[0]-DXMin)*xscale2),y+vsize+((i[1]-DYMin)*yscale)))
+    times.append(time.time())  #################
     pygame.draw.lines(surface,color,0,lines,stroke)
+    times.append(time.time())  #################
     pygame.draw.circle(surface,(0,0,255,128),(int(lines[-1][0]),int(lines[-1][1])),10)
-    surface.blit(font.render("Data Width: "+str(DataHeightX)+" X Scale:"+str(xscale2)+" Y Scale:"+str(yscale),1,(100,255,100)),(40,380))
+    times.append(time.time())  #################
     px,py = (x+((dataset[maxInd][0]-DXMin)*xscale2),y+vsize+((dataset[maxInd][1]-DYMin)*yscale))
     tag = [(px+20,py),(px,py-20),(px-20,py),(px,py+20),(px+20,py)]
+    times.append(time.time())  #################
     if px > hsize/2:
         tx,ty = px-220,py
         pygame.draw.lines(surface,(0,255,0),0,((px-20,py),(tx+150,ty)),2)
     else:
         tx,ty = px+220,py
         pygame.draw.lines(surface,(0,255,0),0,((px+20,py),(tx-150,ty)),2)
+    times.append(time.time())  #################
     tag2 = [(tx+150,ty),(tx+130,ty-20),(tx-130,ty-20),(tx-150,ty),(tx-130,ty+20),(tx+130,ty+20),(tx+150,ty)]
     pygame.draw.lines(surface,(0,255,0),0,tag,2)
     pygame.draw.lines(surface,(0,255,0),0,tag2,2)
     pygame.draw.lines(surface,(0,255,0),0,((tx,ty-20),(tx-130,ty-20)),2)
+    times.append(time.time())  #################
     surface.blit(MLfont.render(stringFormat.format(dataset[maxInd][1]),1,(0,255,0)),(tx-130,ty-14))
-    
+    times.append(time.time())  #################
     try:
         surface.blit(font.render("Choords: "+str((float(lines[3][0]),float(lines[3][1]))),1,(100,255,100)),(40,400))
         surface.blit(font.render("Choords: "+str((float(dataset[3][0]),float(dataset[3][1]))),1,(100,255,100)),(40,420))
@@ -157,6 +165,7 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
         surface.blit(font.render("Max: "+str((float(DXMax),float(DXMin),float(DYMax),float(DYMin))),1,(100,255,100)),(40,480))
     except:
         pass
+    return times
     
 
 
@@ -187,12 +196,13 @@ def Main():
     tp = 0.0
     td = 0.0
     PGA = 0
+    global timev
     times = []
     f = open("/home/ben/Bridge_Tester/Python/times.csv","w")
     while runProgram:
-        times.append(time.time())
+        times.append(time.time())  #################
         WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
-        times.append(time.time())
+        times.append(time.time())  #################
         # Process events
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -230,7 +240,7 @@ def Main():
                         tmpAr = tclass.pressureArray.pop() # clear saved pressures
                 if event.key == K_LEFT:
                     print td
-        times.append(time.time())
+        times.append(time.time())  #################
         while len(tclass.pressureArray) > 11:
             readings = 0
             pressures = 0
@@ -256,10 +266,11 @@ def Main():
                     Dist[1] = td
                 #print Dist, Load
             lines.append([td,tp])
-        times.append(time.time())
+        times.append(time.time())  #################
         if len(lines)>2:
-            Draw_Chart(WindowSurface,10,220,1380,800,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),5,(255,255,255),3,"{0:.2f} LB")
-        times.append(time.time())
+            timev = time.time()
+            charttimes = Draw_Chart(WindowSurface,10,220,1380,800,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),1,(255,255,255),3,"{0:.2f} LB")
+        times.append(time.time())  #################
         #Draw
         WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
         WindowSurface.blit(forceFont.render(str(tp)[:5],1,(100,255,100)),(10,10))
@@ -267,22 +278,26 @@ def Main():
         #WindowSurface.blit(forceFont.render(str(hex(int(td*535)+1100))[:6]+"\"",1,(100,255,100)),(700,10))
         WindowSurface.blit(font.render("Max Load: "+str(60000/(2**tclass.pga))[:5]+"",1,(100,255,100)),(600,10))
         #WindowSurface.blit(font.render("FPS: {0:.1f}".format(1/(time.time()-fps)),1,(100,255,100)),(600,30))
-        times.append(time.time())
+        times.append(time.time())  #################
         tgd = []
         for i in range(1,len(times)):
             tgd.append((i,times[i]-times[i-1]))
+        ctgd = []
+        for i in range(1,len(charttimes)):
+            ctgd.append((i,charttimes[i]-charttimes[i-1]))
         times = []
-        times.append(time.time())
-        Draw_Chart(WindowSurface,1400,220,400,800,tgd,(0,len(tgd)),(1,8),(0,.1),(0,255,0),1,(255,255,255),3,"{0:.6f}")
+        times.append(time.time())  #################
+        Draw_Chart(WindowSurface,1400,220,400,800,tgd,(0,len(tgd)),(1,len(tgd)),(0,.1),(0,255,0),1,(255,255,255),3,"{0:.6f}")
+        Draw_Chart(WindowSurface,1400,220,400,800,ctgd,(0,len(ctgd)),(1,len(ctgd)),(0,.1),(0,0,255),1,(255,255,255),3,"{0:.6f}")
         WindowSurface.blit(font.render("Lines: "+str(len(lines)),1,(100,255,100)),(1600,240))
         WindowSurface.blit(font.render("Polling Frequency: "+str(int(tclass.fps)),1,(100,255,100)),(1600,260))
-        times.append(time.time())
+        times.append(time.time())  #################
         pygame.display.update()
-        times.append(time.time())
+        times.append(time.time())  #################
     f.close()
     pygame.quit()
 
-
+timev = 0
 
 tclass = IOThread() ## create instance
 tclass.start() ## start class running
