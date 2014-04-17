@@ -74,11 +74,11 @@ class IOThread(Thread):
             # readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
         pressure = (readingraw*3.19)/(2.0**self.pga)
         pressure -= self.PTare
-        if pressure < 50000: 
-                self.pressureArray.append([pressure,self.lastDistance,time.time()])#time.time is far away from reading, but should be ok
-                return pressure
-        else:
-                return 0.0
+        #if pressure < 50000: 
+        self.pressureArray.append([pressure,self.lastDistance,time.time()])#time.time is far away from reading, but should be ok
+        return pressure
+        #else:
+        #        return 0.0
     def setled(self,cellAddress,numberToDisplay):
         self.bus.write_byte_data(cellAddress, 0x44, self.segmentLookup[numberToDisplay])
     def getdist(self):
@@ -91,14 +91,14 @@ class IOThread(Thread):
         self.polls = 0
         while self.error == 0:  ## Main thread program using passed variable
             self.lastPressure = self.pollpress()
-            self.lastDistance = self.getdist()
+            #self.lastDistance = self.getdist()
             #print("Pressure",self.pressure)
-            time.sleep(.001)
+            #time.sleep(.001)
             #self.LED = 0
-            if self.polls%100 == 0:
-                self.fps = 100/(time.time()-self.lasttime)
-                self.lasttime = time.time()
-            self.polls+=1
+            #if self.polls%100 == 0:
+            #    self.fps = 100/(time.time()-self.lasttime)
+            #    self.lasttime = time.time()
+            #self.polls+=1
             #while (self.count < 5):
             #    self.pollpress()
             #    #self.setled(self.ledAddresses[self.LED],self.Display[self.LED])
@@ -287,8 +287,8 @@ def Main():
             ctgd.append((i,charttimes[i]-charttimes[i-1]))
         times = []
         times.append(time.time())  #################
-        Draw_Chart(WindowSurface,1400,220,400,800,tgd,(0,len(tgd)),(1,len(tgd)),(0,.1),(0,255,0),1,(255,255,255),3,"{0:.6f}",MLfont)
-        Draw_Chart(WindowSurface,1400,220,400,800,ctgd,(0,len(ctgd)),(1,len(ctgd)),(0,.1),(0,0,255),1,(255,255,255),3,"{0:.6f}",MLfont)
+        #Draw_Chart(WindowSurface,1400,220,400,800,tgd,(0,len(tgd)),(1,len(tgd)),(0,.1),(0,255,0),1,(255,255,255),3,"{0:.6f}",MLfont)
+        #Draw_Chart(WindowSurface,1400,220,400,800,ctgd,(0,len(ctgd)),(1,len(ctgd)),(0,.1),(0,0,255),1,(255,255,255),3,"{0:.6f}",MLfont)
         WindowSurface.blit(font.render("Lines: "+str(len(lines)),1,(100,255,100)),(1600,240))
         WindowSurface.blit(font.render("Polling Frequency: "+str(int(tclass.fps)),1,(100,255,100)),(1600,260))
         times.append(time.time())  #################
