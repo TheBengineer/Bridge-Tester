@@ -234,7 +234,8 @@ def Main():
                     Load = [0,50000]
                     Dist = [0,50000]
                     tclass.DTare = tclass.lastDistance+tclass.DTare
-                    tclass.PTare = tclass.lastPressure+tclass.PTare
+                    #tclass.PTare = tclass.lastPressure+tclass.PTare
+                    tclass.PTare = 0
                     tp = 0.0
                     td = 0.0
                     time.sleep(.1)
