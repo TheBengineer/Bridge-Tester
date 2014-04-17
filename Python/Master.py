@@ -254,7 +254,7 @@ def Main():
                 maxPressure = max(tmpAr[0],maxPressure)
             if readings > 0:
                 #tp = pressures/readings #Averages
-                tp = maxPressure #Max
+                tp = maxPressure #Max   
                 td = distances/readings
                 if tp > Load[0]:
                     Load[0] = tp
