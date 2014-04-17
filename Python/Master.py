@@ -9,7 +9,7 @@ from  technical import *
 
 
 pi = 0 # 1 = running on pi, 0 = running in test mode
-if os.path.exists("/dev/i2c-0"): # Am I runnin on a pi?
+if os.path.exists("/dev/i2c-0"): # Am I running on a pi?
     pi = 1
     import smbus
 
@@ -72,7 +72,7 @@ class IOThread(Thread):
                 # self.pga = 4
                 # self.bus.write_word_data(self.pressureAddress,0x01,self.pgaSetting+4) # Gain of 4
             # readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
-        pressure = (readingraw*3.19)/(2.0**self.pga)
+        pressure = (readingraw)/(2.0**self.pga)
         pressure -= self.PTare
         #if pressure < 50000: 
         self.pressureArray.append([pressure,self.lastDistance,time.time()])#time.time is far away from reading, but should be ok
@@ -255,8 +255,8 @@ def Main():
                 distances += tmpAr[1]
                 maxPressure = max(tmpAr[0],maxPressure)
             if readings > 0:
-                tp = pressures/readings #Averages
-                #tp = maxPressure #Max   
+                #tp = pressures/readings #Averages
+                tp = maxPressure #Max   
                 td = distances/readings
                 if tp > Load[0]:
                     Load[0] = tp
