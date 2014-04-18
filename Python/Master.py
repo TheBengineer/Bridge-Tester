@@ -157,14 +157,6 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     times.append(time.time())  #################
     surface.blit(MLfont.render(stringFormat.format(dataset[maxInd][1]),1,(0,255,0)),(tx-130,ty-14))
     times.append(time.time())  #################
-    try:
-        surface.blit(font.render("Choords: "+str((float(lines[3][0]),float(lines[3][1]))),1,(100,255,100)),(40,400))
-        surface.blit(font.render("Choords: "+str((float(dataset[3][0]),float(dataset[3][1]))),1,(100,255,100)),(40,420))
-        surface.blit(font.render("Last: "+str((float(lines[-1][0]),float(lines[-1][1]))),1,(100,255,100)),(40,440))
-        surface.blit(font.render("Last: "+str((float(dataset[-1][0]),float(dataset[-1][1]))),1,(100,255,100)),(40,460))
-        surface.blit(font.render("Max: "+str((float(DXMax),float(DXMin),float(DYMax),float(DYMin))),1,(100,255,100)),(40,480))
-    except:
-        pass
     return times
     
 
@@ -269,7 +261,7 @@ def Main():
         times.append(time.time())  #################
         if len(lines)>2:
             timev = time.time()
-            charttimes = Draw_Chart(WindowSurface,10,220,1380,800,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),1,(255,255,255),3,"{0:.2f} LB",MLfont)
+            charttimes = Draw_Chart(WindowSurface,10,220,1380,800,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),1,(255,255,255),3,"{0:0.2f} LB",MLfont)
         times.append(time.time())  #################
         #Draw
         #WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
