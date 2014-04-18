@@ -144,27 +144,28 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     pygame.draw.circle(surface,(0,0,255,128),(int(lines[-1][0]),int(lines[-1][1])),10)
     times.append(time.time())  #################
     px,py = (x+((dataset[maxInd][0]-DXMin)*xscale2),y+vsize+((dataset[maxInd][1]-DYMin)*yscale))
-    tag = [(px+20,py),(px,py-20),(px-20,py),(px,py+20),(px+20,py)]
-    times.append(time.time())  #################
     if px > hsize/2:
-        tx,ty = px-220,py
-        pygame.draw.lines(surface,(0,255,0),0,((px-20,py),(tx+150,ty)),2)
+        draw_tag(surface,(px,py),1,MLfont,stringFormat.format(dataset[maxInd][1]))
+    else:
+        draw_tag(surface,(px,py),0,MLfont,stringFormat.format(dataset[maxInd][1]))
+    return times
+    
+def draw_tag(surface,(x,y),left,font,string):
+    tag = [(x+20,y),(x,y-20),(x-20,y),(x,y+20),(x+20,y)]
+    if left == 1:
+        tx,ty = x-220,y
+        pygame.draw.lines(surface,(0,255,0),0,((x-20,y),(tx+150,ty)),2)
     else:
         tx,ty = px+220,py
-        pygame.draw.lines(surface,(0,255,0),0,((px+20,py),(tx-150,ty)),2)
-    times.append(time.time())  #################
+        pygame.draw.lines(surface,(0,255,0),0,((x+20,y),(tx-150,ty)),2)
     tag2 = [(tx+150,ty),(tx+130,ty-20),(tx-130,ty-20),(tx-150,ty),(tx-130,ty+20),(tx+130,ty+20),(tx+150,ty)]
     pygame.draw.lines(surface,(0,255,0),0,tag,2)
     pygame.draw.lines(surface,(0,255,0),0,tag2,2)
     pygame.draw.lines(surface,(0,255,0),0,((tx,ty-20),(tx-130,ty-20)),2)
-    times.append(time.time())  #################
-    surface.blit(MLfont.render(stringFormat.format(dataset[maxInd][1]),1,(0,255,0)),(tx-130,ty-14))
-    times.append(time.time())  #################
-    return times
+    surface.blit(font.render(string,1,(0,255,0)),(tx-130,ty-14))
     
-
-
-
+    
+    
 def Main():
     ################ Pygame Init
     pygame.init()
