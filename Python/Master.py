@@ -46,6 +46,8 @@ class IOThread(Thread):
         self.pga = 1
         self.fps = 0
         self.lasttime = time.time()
+        self.calibration = [0,0,2.94287668,1.876485557,1.927848241,1.796258356,0,0]
+        self.calibrationOffset = [0,0,-119,9.6,-42.47,-78.2,0,0]
         if pi == 1: # running on a Pi?
             self.bus = self.initI2C(self.pressureAddress,self.distanceAddress)
     def initI2C(self,pressureA,distanceA):
@@ -72,8 +74,8 @@ class IOThread(Thread):
                 # self.pga = 4
                 # self.bus.write_word_data(self.pressureAddress,0x01,self.pgaSetting+4) # Gain of 4
             # readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
-        pressure = (readingraw*3.19)/(2.0**self.pga)
-        pressure -= self.PTare
+        pressure = (readingraw*self.calibration[self.pga])/(2.0**self.pga)
+        pressure += -self.PTare # + self.calibrationOffset[self.pga]
         if pressure < 50000: 
                 self.pressureArray.append([pressure,self.lastDistance,time.time()])#time.time is far away from reading, but should be ok
                 return pressure
@@ -208,17 +210,19 @@ def Main():
                     tclass.error = 1
                     break
                 if event.key == K_UP:
-                    tclass.pga = clamp(tclass.pga+1,2,5)
+                    tclass.pga = clamp(tclass.pga+1,1,5)
                     setting = tclass.pgaSetting +(tclass.pga*2)
                     print hex(setting)
                     #tclass.bus.write_word_data(tclass.distanceAddress,0x01,0x0000)
                     tclass.bus.write_word_data(tclass.pressureAddress,0x01,setting)
+                    tclass.pressureArray = []
                 if event.key == K_DOWN:
-                    tclass.pga = clamp(tclass.pga-1,2,5)
+                    tclass.pga = clamp(tclass.pga-1,1,5)
                     setting = tclass.pgaSetting +(tclass.pga*2)
                     print hex(setting)
                     #tclass.bus.write_word_data(tclass.distanceAddress,0x01,0x0000)
                     tclass.bus.write_word_data(tclass.pressureAddress,0x01,setting)
+                    tclass.pressureArray = []
                 if event.key == K_RIGHT:
                     lines = []
                     Load = [0,50000]
@@ -261,12 +265,12 @@ def Main():
         times.append(time.time())  #################
         if len(lines)>2:
             timev = time.time()
-            charttimes = Draw_Chart(WindowSurface,10,220,1380,800,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),1,(255,255,255),3,"{0:0.2f} LB",MLfont)
+            charttimes = Draw_Chart(WindowSurface,10,220,1380,800,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),1,(255,255,255),3,"{0:.2f} LB",MLfont)
         times.append(time.time())  #################
         #Draw
         #WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
-        WindowSurface.blit(forceFont.render("{0:.1f} LB".format(tp),1,(100,255,100)),(10,10))
-        WindowSurface.blit(forceFont.render("{0:.3f}\"".format(td),1,(100,255,100)),(1100,10))
+        WindowSurface.blit(forceFont.render("{0:>11.1f} LB".format(tp),1,(0,255,0)),(10,10))
+        WindowSurface.blit(forceFont.render("{0:>7.3f}\"".format(td),1,(100,255,100)),(1150,10))
         #WindowSurface.blit(forceFont.render(str(hex(int(td*535)+1100))[:6]+"\"",1,(100,255,100)),(700,10))
         WindowSurface.blit(font.render("Max Load: "+str(60000/(2**tclass.pga))[:5]+"",1,(100,255,100)),(600,10))
         #WindowSurface.blit(font.render("FPS: {0:.1f}".format(1/(time.time()-fps)),1,(100,255,100)),(600,30))
