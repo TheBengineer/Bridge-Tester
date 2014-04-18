@@ -46,9 +46,9 @@ class IOThread(Thread):
         self.pga = 1
         self.fps = 0
         self.lasttime = time.time()
-        self.calibration = [0,1,2.94287668,1.876485557,1.927848241,1.796258356,0,0,0]
+        self.calibration = [1.858747108,1.858747108,1.858747108,1.858747108,1.858747108,1.858747108,1.858747108,1.858747108]
         #self.calibration = [1]*9
-        self.calibrationOffset = [0,1,-119,9.6,-42.47,-78.2,0,0,0]
+        self.calibrationOffset = [26]*8
         if pi == 1: # running on a Pi?
             self.bus = self.initI2C(self.pressureAddress,self.distanceAddress)
     def initI2C(self,pressureA,distanceA):
@@ -216,6 +216,7 @@ def Main():
                     print hex(setting)
                     #tclass.bus.write_word_data(tclass.distanceAddress,0x01,0x0000)
                     tclass.bus.write_word_data(tclass.pressureAddress,0x01,setting)
+                    time.sleep(.05)
                     tclass.pressureArray = []
                 if event.key == K_DOWN:
                     tclass.pga = clamp(tclass.pga-1,1,5)
@@ -223,6 +224,7 @@ def Main():
                     print hex(setting)
                     #tclass.bus.write_word_data(tclass.distanceAddress,0x01,0x0000)
                     tclass.bus.write_word_data(tclass.pressureAddress,0x01,setting)
+                    time.sleep(.05)
                     tclass.pressureArray = []
                 if event.key == K_RIGHT:
                     lines = []
