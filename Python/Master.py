@@ -114,9 +114,6 @@ class IOThread(Thread):
 
 
 def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax),(DYMin,DYMax),color,stroke,bordercolor,border,stringFormat,MLfont):
-    global timev
-    times = [timev]
-    times.append(time.time())  #################
     DataLen = DataEnd-DataStart
     DataHeightX = DXMax-DXMin
     DataHeightY = DYMax-DYMin
@@ -125,12 +122,11 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     yscale = -(vsize-60)/DataHeightY
     maxVal = 0
     maxInd = 0
-    times.append(time.time())  #################
     MLfont = pygame.font.Font("freesansbold.ttf",30)
-    times.append(time.time())  #################
+    pygame.draw.rect(surface,(0,0,0),(x-25,y-25,hsize+50,vsize+50))
     if border >= 1:
-        pygame.draw.lines(surface,bordercolor,0,((x,y),(x,y+vsize),(x+hsize,y+vsize),(x+hsize,y),(x,y)),border)
-    times.append(time.time())  #################
+        draw_rect(surface,(x,y,hsize,vsize),bordercolor,25,3)
+        #pygame.draw.lines(surface,bordercolor,0,((x,y),(x,y+vsize),(x+hsize,y+vsize),(x+hsize,y),(x,y)),border)
     lines = []
     for j in range(DataLen):
         i = dataset[j+DataStart]
@@ -138,31 +134,37 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
             maxVal = i[1]
             maxInd = j
         lines.append((x+((i[0]-DXMin)*xscale2),y+vsize+((i[1]-DYMin)*yscale)))
-    times.append(time.time())  #################
     pygame.draw.lines(surface,color,0,lines,stroke)
-    times.append(time.time())  #################
-    pygame.draw.circle(surface,(0,0,255,128),(int(lines[-1][0]),int(lines[-1][1])),10)
-    times.append(time.time())  #################
+    c = (255,255,255)
+    tc = (255,0,0)
     px,py = (x+((dataset[maxInd][0]-DXMin)*xscale2),y+vsize+((dataset[maxInd][1]-DYMin)*yscale))
     if px > hsize/2:
-        draw_tag(surface,(px,py),1,MLfont,stringFormat.format(dataset[maxInd][1]))
+        draw_tag(surface,(px,py),1,c,tc,MLfont,stringFormat.format(dataset[maxInd][1]))
     else:
-        draw_tag(surface,(px,py),0,MLfont,stringFormat.format(dataset[maxInd][1]))
-    return times
+        draw_tag(surface,(px,py),0,c,tc,MLfont,stringFormat.format(dataset[maxInd][1]))
+    tc = (0,100,255)
+    px,py = (x+((dataset[-1][0]-DXMin)*xscale2),y+vsize+((dataset[-1][1]-DYMin)*yscale))
+    if px > hsize/2:
+        draw_tag(surface,(px,py),1,c,tc,MLfont,stringFormat.format(dataset[-1][1]))
+    else:
+        draw_tag(surface,(px,py),0,c,tc,MLfont,stringFormat.format(dataset[-1][1]))
     
-def draw_tag(surface,(x,y),left,font,string):
+def draw_rect(surface,(x,y,w,h),color,cx,width):
+    lines = ((x+cx,y),(x+w-cx,y),(x+w,y+cx),(x+w,y+h-cx),(x+w-cx,y+h),(x+cx,y+h),(x,y+h-cx),(x,y+cx),(x+cx,y))
+    pygame.draw.lines(surface,color,0,lines,width)
+def draw_tag(surface,(x,y),left,color,tcolor,font,string):
     tag = [(x+20,y),(x,y-20),(x-20,y),(x,y+20),(x+20,y)]
     if left == 1:
         tx,ty = x-220,y
-        pygame.draw.lines(surface,(0,255,0),0,((x-20,y),(tx+150,ty)),2)
+        pygame.draw.lines(surface,color,0,((x-20,y),(tx+150,ty)),2)
     else:
-        tx,ty = px+220,py
-        pygame.draw.lines(surface,(0,255,0),0,((x+20,y),(tx-150,ty)),2)
+        tx,ty = x+220,y
+        pygame.draw.lines(surface,color,0,((x+20,y),(tx-150,ty)),2)
     tag2 = [(tx+150,ty),(tx+130,ty-20),(tx-130,ty-20),(tx-150,ty),(tx-130,ty+20),(tx+130,ty+20),(tx+150,ty)]
-    pygame.draw.lines(surface,(0,255,0),0,tag,2)
-    pygame.draw.lines(surface,(0,255,0),0,tag2,2)
-    pygame.draw.lines(surface,(0,255,0),0,((tx,ty-20),(tx-130,ty-20)),2)
-    surface.blit(font.render(string,1,(0,255,0)),(tx-130,ty-14))
+    pygame.draw.lines(surface,color,0,tag,2)
+    pygame.draw.lines(surface,color,0,tag2,2)
+    pygame.draw.lines(surface,color,0,((tx,ty-20),(tx-130,ty-20)),2)
+    surface.blit(font.render(string,1,tcolor),(tx-130,ty-14))
     
     
     
@@ -196,9 +198,7 @@ def Main():
     times = []
     f = open("/home/ben/Bridge_Tester/Python/times.csv","w")
     while runProgram:
-        times.append(time.time())  #################
-        WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
-        times.append(time.time())  #################
+        #WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
         # Process events
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -240,7 +240,6 @@ def Main():
                         tmpAr = tclass.pressureArray.pop() # clear saved pressures
                 if event.key == K_LEFT:
                     print td
-        times.append(time.time())  #################
         while len(tclass.pressureArray) > 11:
             readings = 0
             pressures = 0
@@ -266,34 +265,23 @@ def Main():
                     Dist[1] = td
                 #print Dist, Load
             lines.append([td,tp])
-        times.append(time.time())  #################
         if len(lines)>2:
             timev = time.time()
-            charttimes = Draw_Chart(WindowSurface,10,220,1380,800,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,0,0),1,(255,255,255),3,"{0:.2f} LB",MLfont)
-        times.append(time.time())  #################
+            charttimes = Draw_Chart(WindowSurface,10,420,1180,600,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,255,255),1,(0,100,255),3,"{0:.2f} LB",MLfont)
         #Draw
+        draw_rect(WindowSurface,(10,225,1180,175),(0,100,255),25,3)
         #WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
-        WindowSurface.blit(forceFont.render("{0:>11.1f} LB".format(tp),1,(0,255,0)),(10,10))
+        WindowSurface.blit(forceFont.render("{0:>11} LB".format(int(tp)),1,(255,0,0)),(10,210))
         WindowSurface.blit(forceFont.render("{0:>7.3f}\"".format(td),1,(100,255,100)),(1150,10))
         #WindowSurface.blit(forceFont.render(str(hex(int(td*535)+1100))[:6]+"\"",1,(100,255,100)),(700,10))
         WindowSurface.blit(font.render("Max Load: "+str(60000/(2**tclass.pga))[:5]+"",1,(100,255,100)),(600,10))
         #WindowSurface.blit(font.render("FPS: {0:.1f}".format(1/(time.time()-fps)),1,(100,255,100)),(600,30))
-        times.append(time.time())  #################
-        tgd = []
-        for i in range(1,len(times)):
-            tgd.append((i,times[i]-times[i-1]))
-        ctgd = []
-        for i in range(1,len(charttimes)):
-            ctgd.append((i,charttimes[i]-charttimes[i-1]))
-        times = []
-        times.append(time.time())  #################
-        Draw_Chart(WindowSurface,1400,220,400,800,tgd,(0,len(tgd)),(1,len(tgd)),(0,.1),(0,255,0),1,(255,255,255),3,"{0:.6f}",MLfont)
-        Draw_Chart(WindowSurface,1400,220,400,800,ctgd,(0,len(ctgd)),(1,len(ctgd)),(0,.1),(0,0,255),1,(255,255,255),3,"{0:.6f}",MLfont)
+        #Draw_Chart(WindowSurface,1200,420,600,600,(1,1)*8,(0,5),(1,5),(0,.1),(0,255,0),1,(255,255,255),3,"{0:.6f}",MLfont)
         WindowSurface.blit(font.render("Lines: "+str(len(lines)),1,(100,255,100)),(1600,240))
         WindowSurface.blit(font.render("Polling Frequency: "+str(int(tclass.fps)),1,(100,255,100)),(1600,260))
-        times.append(time.time())  #################
+        pygame.draw.rect(WindowSurface,(255,255,255),(50,300,200,100))
         pygame.display.update()
-        times.append(time.time())  #################
+        #pygame.draw.lines(WindowSurface,color,0,tag,2)
     f.close()
     pygame.quit()
 
