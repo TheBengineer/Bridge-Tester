@@ -46,8 +46,9 @@ class IOThread(Thread):
         self.pga = 1
         self.fps = 0
         self.lasttime = time.time()
-        self.calibration = [0,0,2.94287668,1.876485557,1.927848241,1.796258356,0,0]
-        self.calibrationOffset = [0,0,-119,9.6,-42.47,-78.2,0,0]
+        self.calibration = [0,1,2.94287668,1.876485557,1.927848241,1.796258356,0,0,0]
+        #self.calibration = [1]*9
+        self.calibrationOffset = [0,1,-119,9.6,-42.47,-78.2,0,0,0]
         if pi == 1: # running on a Pi?
             self.bus = self.initI2C(self.pressureAddress,self.distanceAddress)
     def initI2C(self,pressureA,distanceA):
@@ -75,7 +76,7 @@ class IOThread(Thread):
                 # self.bus.write_word_data(self.pressureAddress,0x01,self.pgaSetting+4) # Gain of 4
             # readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
         pressure = (readingraw*self.calibration[self.pga])/(2.0**self.pga)
-        pressure += -self.PTare # + self.calibrationOffset[self.pga]
+        #pressure += -self.PTare + self.calibrationOffset[self.pga]
         if pressure < 50000: 
                 self.pressureArray.append([pressure,self.lastDistance,time.time()])#time.time is far away from reading, but should be ok
                 return pressure
@@ -249,8 +250,8 @@ def Main():
                 distances += tmpAr[1]
                 maxPressure = max(tmpAr[0],maxPressure)
             if readings > 0:
-                tp = pressures/readings #Averages
-                #tp = maxPressure #Max
+                #tp = pressures/readings #Averages
+                tp = maxPressure #Max
                 td = distances/readings
                 if tp > Load[0]:
                     Load[0] = tp
