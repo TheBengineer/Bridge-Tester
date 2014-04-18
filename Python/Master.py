@@ -269,7 +269,7 @@ def Main():
             timev = time.time()
             charttimes = Draw_Chart(WindowSurface,10,420,1180,600,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,255,255),1,(0,100,255),3,"{0:.2f} LB",MLfont)
         #Draw
-        draw_rect(WindowSurface,(10,225,1180,175),(0,100,255),25,3)
+        draw_rect(WindowSurface,(10,230,1180,175),(0,100,250),25,3)
         #WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
         WindowSurface.blit(forceFont.render("{0:>11} LB".format(int(tp)),1,(255,0,0)),(10,210))
         WindowSurface.blit(forceFont.render("{0:>7.3f}\"".format(td),1,(100,255,100)),(1150,10))
