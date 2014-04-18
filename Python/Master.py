@@ -227,12 +227,16 @@ def Main():
                     print hex(setting)
                     #tclass.bus.write_word_data(tclass.distanceAddress,0x01,0x0000)
                     tclass.bus.write_word_data(tclass.pressureAddress,0x01,setting)
+                    time.sleep(.1)
+                    tclass.pressureArray = []
                 if event.key == K_DOWN:
                     tclass.pga = clamp(tclass.pga-1,2,5)
                     setting = tclass.pgaSetting +(tclass.pga*2)
                     print hex(setting)
                     #tclass.bus.write_word_data(tclass.distanceAddress,0x01,0x0000)
                     tclass.bus.write_word_data(tclass.pressureAddress,0x01,setting)
+                    time.sleep(.1)
+                    tclass.pressureArray = []
                 if event.key == K_RIGHT:
                     lines = []
                     Load = [0,50000]
