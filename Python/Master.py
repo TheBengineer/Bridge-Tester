@@ -76,7 +76,7 @@ class IOThread(Thread):
                 # self.bus.write_word_data(self.pressureAddress,0x01,self.pgaSetting+4) # Gain of 4
             # readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
         pressure = (readingraw*self.calibration[self.pga])/(2.0**self.pga)
-        #pressure += -self.PTare + self.calibrationOffset[self.pga]
+        pressure += -self.PTare + self.calibrationOffset[self.pga]
         if pressure < 50000: 
                 self.pressureArray.append([pressure,self.lastDistance,time.time()])#time.time is far away from reading, but should be ok
                 return pressure
@@ -166,7 +166,20 @@ def draw_tag(surface,(x,y),left,color,tcolor,font,string):
     pygame.draw.lines(surface,color,0,((tx,ty-20),(tx-130,ty-20)),2)
     surface.blit(font.render(string,1,tcolor),(tx-130,ty-14))
     
-    
+def draw_tag2(surface,(x,y),left,color,tcolor,font,string,string2):
+    tag = [(x+20,y),(x,y-20),(x-20,y),(x,y+20),(x+20,y)]
+    if left == 1:
+        tx,ty = x-220,y
+        pygame.draw.lines(surface,color,0,((x-20,y),(tx+150,ty)),2)
+    else:
+        tx,ty = x+220,y
+        pygame.draw.lines(surface,color,0,((x+20,y),(tx-150,ty)),2)
+    tag2 = [(tx+150,ty),(tx+130,ty-20),(tx-130,ty-20),(tx-150,ty),(tx-130,ty+20),(tx+130,ty+20),(tx+150,ty)]
+    tag3 = [(tx+130,ty+20),(tx-150,ty+40),(tx+130,ty+60),(tx-130,ty+60),(tx+150,ty+40),(tx+150,ty+40)]
+    pygame.draw.lines(surface,color,0,tag,2)
+    pygame.draw.lines(surface,color,0,tag2,2)
+    pygame.draw.lines(surface,color,0,((tx,ty-20),(tx-130,ty-20)),2)
+    surface.blit(font.render(string,1,tcolor),(tx-130,ty-14))
     
 def Main():
     ################ Pygame Init
@@ -267,20 +280,21 @@ def Main():
             lines.append([td,tp])
         if len(lines)>2:
             timev = time.time()
-            charttimes = Draw_Chart(WindowSurface,10,420,1180,600,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.2,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,255,255),1,(0,100,255),3,"{0:.2f} LB",MLfont)
+            charttimes = Draw_Chart(WindowSurface,10,420,1180,600,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.05,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,255,255),1,(0,100,255),3,"{0:.2f} LB",MLfont)
         #Draw
-        pygame.draw.rect(WindowSurface,(0,0,0),(10,230,765,175)) # load
+        pygame.draw.rect(WindowSurface,(0,0,0),(10,230,800,175)) # load
         draw_rect(WindowSurface,(10,230,1180,175),(0,100,250),25,3)
         
         draw_rect(WindowSurface,(10,40,1180,175),(0,100,250),25,3) # max load
-        WindowSurface.blit(forceFont.render("MAX LOAD",1,(255,0,0)),(72,20))
+        WindowSurface.blit(forceFont.render("MAX LOAD",1,(255,255,255)),(72,20))
         pygame.draw.rect(WindowSurface,(0,0,0),(1205,230,700,175))
         draw_rect(WindowSurface,(1205,230,700,175),(0,100,250),25,3)# displacement
-        WindowSurface.blit(forceFont.render("{0:>7.2f}\"".format(td),1,(100,255,100)),(1175,210))
-        #WindowSurface.blit(forceFont.render("MAX LOAD",1,(255,0,0)),(72,20))
+        WindowSurface.blit(forceFont.render("{0:>7.2f}\"".format(td),1,(255,0,0)),(1175,210))
+        draw_rect(WindowSurface,(1205,40,700,175),(0,100,250),25,3)# displacement
+        WindowSurface.blit(forceFont.render("FLEX",1,(255,255,255)),(1300,20))
         
         #WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
-        WindowSurface.blit(forceFont.render("{0:>11}".format(int(Load[0])),1,(255,0,0)),(10,210))
+        WindowSurface.blit(forceFont.render("{0:>9}".format(int(Load[0])),1,(255,0,0)),(10,210))
         WindowSurface.blit(forceFont.render("LB",1,(255,0,0)),(900,210))
         
         #WindowSurface.blit(forceFont.render(str(hex(int(td*535)+1100))[:6]+"\"",1,(100,255,100)),(700,10))
@@ -289,7 +303,7 @@ def Main():
         #Draw_Chart(WindowSurface,1200,420,600,600,(1,1)*8,(0,5),(1,5),(0,.1),(0,255,0),1,(255,255,255),3,"{0:.6f}",MLfont)
         WindowSurface.blit(font.render("Lines: "+str(len(lines)),1,(100,255,100)),(1600,240))
         WindowSurface.blit(font.render("Polling Frequency: "+str(int(tclass.fps)),1,(100,255,100)),(1600,260))
-        pygame.draw.rect(WindowSurface,(255,255,255),(10,300,200,100))
+        #pygame.draw.rect(WindowSurface,(255,255,255),(10,300,200,100))
         pygame.display.update()
         #pygame.draw.lines(WindowSurface,color,0,tag,2)
     f.close()
