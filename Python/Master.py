@@ -60,6 +60,7 @@ class IOThread(Thread):
         pressure = readingraw*self.calibration
         pressure += -self.PTare + self.calibrationOffset
         self.pressureArray.append((pressure,self.lastDistance))
+        return pressure
     def setled(self,cellAddress,numberToDisplay):
         self.bus.write_byte_data(cellAddress, 0x44, self.segmentLookup[numberToDisplay])
     def getdist(self):
@@ -80,7 +81,7 @@ class IOThread(Thread):
 
 
 
-def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax),(DYMin,DYMax),color,stroke,bordercolor,border,stringFormat,MLfont):
+def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax),(DYMin,DYMax),color,stroke,bordercolor,border,stringFormat,stringFormat2,MLfont):
     DataLen = DataEnd-DataStart
     DataHeightX = DXMax-DXMin
     DataHeightY = DYMax-DYMin
@@ -106,9 +107,9 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     tc = (255,0,0)
     px,py = (x+((dataset[maxInd][0]-DXMin)*xscale2),y+vsize+((dataset[maxInd][1]-DYMin)*yscale))
     if px > hsize/2:
-        draw_tag(surface,(px,py),1,c,tc,MLfont,stringFormat.format(dataset[maxInd][1]))
+        draw_tag2(surface,(px,py),1,c,tc,MLfont,stringFormat.format(dataset[maxInd][1]),stringFormat2.format(dataset[maxInd][0]))
     else:
-        draw_tag(surface,(px,py),0,c,tc,MLfont,stringFormat.format(dataset[maxInd][1]))
+        draw_tag2(surface,(px,py),0,c,tc,MLfont,stringFormat.format(dataset[maxInd][1]),stringFormat2.format(dataset[maxInd][0]))
     tc = (0,100,255)
     px,py = (x+((dataset[-1][0]-DXMin)*xscale2),y+vsize+((dataset[-1][1]-DYMin)*yscale))
     if px > hsize/2:
@@ -142,11 +143,13 @@ def draw_tag2(surface,(x,y),left,color,tcolor,font,string,string2):
         tx,ty = x+220,y
         pygame.draw.lines(surface,color,0,((x+20,y),(tx-150,ty)),2)
     tag2 = [(tx+150,ty),(tx+130,ty-20),(tx-130,ty-20),(tx-150,ty),(tx-130,ty+20),(tx+130,ty+20),(tx+150,ty)]
-    tag3 = [(tx+130,ty+20),(tx-150,ty+40),(tx+130,ty+60),(tx-130,ty+60),(tx+150,ty+40),(tx+150,ty+40)]
+    tag3 = [(tx+130,ty+20),(tx+150,ty+40),(tx+130,ty+60),(tx-130,ty+60),(tx-150,ty+40),(tx-130,ty+20)]
     pygame.draw.lines(surface,color,0,tag,2)
     pygame.draw.lines(surface,color,0,tag2,2)
+    pygame.draw.lines(surface,color,0,tag3,2)
     pygame.draw.lines(surface,color,0,((tx,ty-20),(tx-130,ty-20)),2)
     surface.blit(font.render(string,1,tcolor),(tx-130,ty-14))
+    surface.blit(font.render(string2,1,tcolor),(tx-130,ty+26))
     
 def Main():
     ################ Pygame Init
@@ -226,7 +229,7 @@ def Main():
             lines.append([td,tp])
         if len(lines)>2:
             timev = time.time()
-            charttimes = Draw_Chart(WindowSurface,10,420,1180,600,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.05,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,255,255),1,(0,100,255),3,"{0:.2f} LB",MLfont)
+            charttimes = Draw_Chart(WindowSurface,10,420,1180,600,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.05,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,255,255),1,(0,100,255),3,"{0:.2f} LB","{0:.3f}\"",MLfont)
         #Draw
         pygame.draw.rect(WindowSurface,(0,0,0),(10,230,800,175)) # load
         draw_rect(WindowSurface,(10,230,1180,175),(0,100,250),25,3)
