@@ -198,8 +198,7 @@ def Main():
                     tp = 0.0
                     td = 0.0
                     time.sleep(.1)
-                    while len(tclass.pressureArray) > 1:
-                        tclass.pressureArray = [] # clear saved pressures
+                    tclass.pressureArray = [] # clear saved pressures
         while len(tclass.pressureArray) > 11:
             readings = 0
             pressures = 0
