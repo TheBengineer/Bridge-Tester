@@ -43,12 +43,10 @@ class IOThread(Thread):
         self.lastPressure = 0
         self.lastDistance = 0
         self.Display = [0]*5
-        self.pga = 1
         self.fps = 0
         self.lasttime = time.time()
-        self.calibration = [1.858747108,1.858747108,1.858747108,1.858747108,1.858747108,1.858747108,1.858747108,1.858747108]
-        #self.calibration = [1]*9
-        self.calibrationOffset = [26]*8
+        self.calibration = 0.929373554
+        self.calibrationOffset = 26
         if pi == 1: # running on a Pi?
             self.bus = self.initI2C(self.pressureAddress,self.distanceAddress)
     def initI2C(self,pressureA,distanceA):
@@ -59,29 +57,9 @@ class IOThread(Thread):
         return bus
     def pollpress(self):
         readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
-        # if readingraw > 1000:
-            # if self.pga == 2:
-                # self.pga = 1
-                # self.bus.write_word_data(self.pressureAddress,0x01,self.pgaSetting) # Gain of 2
-            # elif self.pga == 4:
-                # self.pga = 2
-                # self.bus.write_word_data(self.pressureAddress,0x01,self.pgaSetting+2) # Gain of 4
-            # readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
-        # if readingraw < 500:
-            # if self.pga == 1:
-                # self.pga = 2
-                # self.bus.write_word_data(self.pressureAddress,0x01,self.pgaSetting+2) # Gain of 2
-            # elif self.pga == 2:
-                # self.pga = 4
-                # self.bus.write_word_data(self.pressureAddress,0x01,self.pgaSetting+4) # Gain of 4
-            # readingraw = convertReading(self.bus.read_word_data(self.pressureAddress,0x00))
-        pressure = (readingraw*self.calibration[self.pga])/(2.0**self.pga)
-        pressure += -self.PTare + self.calibrationOffset[self.pga]
-        if pressure < 50000: 
-                self.pressureArray.append([pressure,self.lastDistance,time.time()])#time.time is far away from reading, but should be ok
-                return pressure
-        else:
-                return 0.0
+        pressure = readingraw*self.calibration
+        pressure += -self.PTare + self.calibrationOffset
+        self.pressureArray.append((pressure,self.lastDistance))
     def setled(self,cellAddress,numberToDisplay):
         self.bus.write_byte_data(cellAddress, 0x44, self.segmentLookup[numberToDisplay])
     def getdist(self):
@@ -92,24 +70,13 @@ class IOThread(Thread):
     def run(self):  ## dont need it here
         self.error = 0
         self.polls = 0
+        self.lastDistance = self.getdist()
         while self.error == 0:  ## Main thread program using passed variable
             self.lastPressure = self.pollpress()
-            self.lastDistance = self.getdist()
-            #print("Pressure",self.pressure)
+            if self.polls%10 == 0:
+                self.lastDistance = self.getdist()
+            self.polls += 1
             time.sleep(.001)
-            #self.LED = 0
-            if self.polls%100 == 0:
-                self.fps = 100/(time.time()-self.lasttime)
-                self.lasttime = time.time()
-            self.polls+=1
-            #while (self.count < 5):
-            #    self.pollpress()
-            #    #self.setled(self.ledAddresses[self.LED],self.Display[self.LED])
-            #    self.count += 1
-            #    self.LED += 1
-            #    #print("LED",self.LED)
-            #    #print("distance",self.distance)
-            #    time.sleep(.0057)
 
 
 
@@ -207,8 +174,6 @@ def Main():
     tp = 0.0
     td = 0.0
     PGA = 0
-    global timev
-    times = []
     f = open("/home/ben/Bridge_Tester/Python/times.csv","w")
     while runProgram:
         #WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
@@ -224,22 +189,6 @@ def Main():
                     runProgram = 0
                     tclass.error = 1
                     break
-                if event.key == K_UP:
-                    tclass.pga = clamp(tclass.pga+1,1,5)
-                    setting = tclass.pgaSetting +(tclass.pga*2)
-                    print hex(setting)
-                    #tclass.bus.write_word_data(tclass.distanceAddress,0x01,0x0000)
-                    tclass.bus.write_word_data(tclass.pressureAddress,0x01,setting)
-                    time.sleep(.05)
-                    tclass.pressureArray = []
-                if event.key == K_DOWN:
-                    tclass.pga = clamp(tclass.pga-1,1,5)
-                    setting = tclass.pgaSetting +(tclass.pga*2)
-                    print hex(setting)
-                    #tclass.bus.write_word_data(tclass.distanceAddress,0x01,0x0000)
-                    tclass.bus.write_word_data(tclass.pressureAddress,0x01,setting)
-                    time.sleep(.05)
-                    tclass.pressureArray = []
                 if event.key == K_RIGHT:
                     lines = []
                     Load = [0,50000]
@@ -250,9 +199,7 @@ def Main():
                     td = 0.0
                     time.sleep(.1)
                     while len(tclass.pressureArray) > 1:
-                        tmpAr = tclass.pressureArray.pop() # clear saved pressures
-                if event.key == K_LEFT:
-                    print td
+                        tclass.pressureArray = [] # clear saved pressures
         while len(tclass.pressureArray) > 11:
             readings = 0
             pressures = 0
@@ -298,11 +245,11 @@ def Main():
         WindowSurface.blit(forceFont.render("LB",1,(255,0,0)),(900,210))
         
         #WindowSurface.blit(forceFont.render(str(hex(int(td*535)+1100))[:6]+"\"",1,(100,255,100)),(700,10))
-        WindowSurface.blit(font.render("Max Load: "+str(60000/(2**tclass.pga))[:5]+"",1,(100,255,100)),(600,10))
+        #WindowSurface.blit(font.render("Max Load: "+str(60000/(2**tclass.pga))[:5]+"",1,(100,255,100)),(600,10))
         #WindowSurface.blit(font.render("FPS: {0:.1f}".format(1/(time.time()-fps)),1,(100,255,100)),(600,30))
         #Draw_Chart(WindowSurface,1200,420,600,600,(1,1)*8,(0,5),(1,5),(0,.1),(0,255,0),1,(255,255,255),3,"{0:.6f}",MLfont)
-        WindowSurface.blit(font.render("Lines: "+str(len(lines)),1,(100,255,100)),(1600,240))
-        WindowSurface.blit(font.render("Polling Frequency: "+str(int(tclass.fps)),1,(100,255,100)),(1600,260))
+        #WindowSurface.blit(font.render("Lines: "+str(len(lines)),1,(100,255,100)),(1600,240))
+        #WindowSurface.blit(font.render("Polling Frequency: "+str(int(tclass.fps)),1,(100,255,100)),(1600,260))
         #pygame.draw.rect(WindowSurface,(255,255,255),(10,300,200,100))
         pygame.display.update()
         #pygame.draw.lines(WindowSurface,color,0,tag,2)
