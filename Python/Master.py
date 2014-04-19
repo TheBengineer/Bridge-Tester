@@ -87,14 +87,12 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     DataHeightY = DYMax-DYMin
     xscale = (hsize+1)/DataLen
     xscale2 = (hsize)/DataHeightX
-    yscale = -(vsize-60)/DataHeightY
+    yscale = -(vsize-25)/DataHeightY
     maxVal = 0
     maxInd = 0
-    MLfont = pygame.font.Font("freesansbold.ttf",30)
     pygame.draw.rect(surface,(0,0,0),(x-25,y-25,hsize+50,vsize+50))
     if border >= 1:
         draw_rect(surface,(x,y,hsize,vsize),bordercolor,25,3)
-        #pygame.draw.lines(surface,bordercolor,0,((x,y),(x,y+vsize),(x+hsize,y+vsize),(x+hsize,y),(x,y)),border)
     lines = []
     for j in range(DataLen):
         i = dataset[j+DataStart]
@@ -165,10 +163,20 @@ def Main():
     MouseSurface.fill((0,100,0,0))
     pygame.draw.line(MouseSurface,(0,255,0),(16,0),(16,32),1)
     pygame.draw.line(MouseSurface,(0,255,0),(0,16),(32,16),1)
-    
     font = pygame.font.Font("freesansbold.ttf",12)
     forceFont = pygame.font.Font("freesansbold.ttf",200)
     MLfont = pygame.font.Font("freesansbold.ttf",30)
+    
+    ######### Static Draw
+    
+    draw_rect(WindowSurface,(10,40,1180,175),(0,100,250),25,3) # max load
+    WindowSurface.blit(forceFont.render("MAX LOAD",1,(255,255,255)),(72,20))
+    draw_rect(WindowSurface,(1205,40,700,175),(0,100,250),25,3)# displacement
+    WindowSurface.blit(forceFont.render("FLEX",1,(255,255,255)),(1300,20))
+    WindowSurface.blit(forceFont.render("LB",1,(255,0,0)),(900,210))
+    
+    
+    
     runProgram = 1
     mousex, mousey = 0,0
     lines = []
@@ -231,30 +239,15 @@ def Main():
             timev = time.time()
             charttimes = Draw_Chart(WindowSurface,10,420,1180,600,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.05,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,255,255),1,(0,100,255),3,"{0:.2f} LB","{0:.3f}\"",MLfont)
         #Draw
-        pygame.draw.rect(WindowSurface,(0,0,0),(10,230,800,175)) # load
-        draw_rect(WindowSurface,(10,230,1180,175),(0,100,250),25,3)
+        pygame.draw.rect(WindowSurface,(0,0,0),(10,230,800,175)) # Blank load
+        draw_rect(WindowSurface,(10,230,1180,175),(0,100,250),25,3) #Load Rect
+        WindowSurface.blit(forceFont.render("{0:>9}".format(int(Load[0])),1,(255,0,0)),(10,210)) #Load
         
-        draw_rect(WindowSurface,(10,40,1180,175),(0,100,250),25,3) # max load
-        WindowSurface.blit(forceFont.render("MAX LOAD",1,(255,255,255)),(72,20))
-        pygame.draw.rect(WindowSurface,(0,0,0),(1205,230,700,175))
-        draw_rect(WindowSurface,(1205,230,700,175),(0,100,250),25,3)# displacement
-        WindowSurface.blit(forceFont.render("{0:>7.2f}\"".format(td),1,(255,0,0)),(1175,210))
-        draw_rect(WindowSurface,(1205,40,700,175),(0,100,250),25,3)# displacement
-        WindowSurface.blit(forceFont.render("FLEX",1,(255,255,255)),(1300,20))
         
-        #WindowSurface.blit(MouseSurface,(mousex-16,mousey-16))
-        WindowSurface.blit(forceFont.render("{0:>9}".format(int(Load[0])),1,(255,0,0)),(10,210))
-        WindowSurface.blit(forceFont.render("LB",1,(255,0,0)),(900,210))
-        
-        #WindowSurface.blit(forceFont.render(str(hex(int(td*535)+1100))[:6]+"\"",1,(100,255,100)),(700,10))
-        #WindowSurface.blit(font.render("Max Load: "+str(60000/(2**tclass.pga))[:5]+"",1,(100,255,100)),(600,10))
-        #WindowSurface.blit(font.render("FPS: {0:.1f}".format(1/(time.time()-fps)),1,(100,255,100)),(600,30))
-        #Draw_Chart(WindowSurface,1200,420,600,600,(1,1)*8,(0,5),(1,5),(0,.1),(0,255,0),1,(255,255,255),3,"{0:.6f}",MLfont)
-        #WindowSurface.blit(font.render("Lines: "+str(len(lines)),1,(100,255,100)),(1600,240))
-        #WindowSurface.blit(font.render("Polling Frequency: "+str(int(tclass.fps)),1,(100,255,100)),(1600,260))
-        #pygame.draw.rect(WindowSurface,(255,255,255),(10,300,200,100))
+        pygame.draw.rect(WindowSurface,(0,0,0),(1205,230,700,175)) #Blank Displacement
+        draw_rect(WindowSurface,(1205,230,700,175),(0,100,250),25,3)# displacement Rect
+        WindowSurface.blit(forceFont.render("{0:>7.2f}\"".format(td),1,(255,0,0)),(1175,210)) #Displacement
         pygame.display.update()
-        #pygame.draw.lines(WindowSurface,color,0,tag,2)
     f.close()
     pygame.quit()
 
