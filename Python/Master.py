@@ -175,6 +175,9 @@ def Main():
     WindowSurface.blit(forceFont.render("FLEX",1,(255,255,255)),(1300,20))
     WindowSurface.blit(forceFont.render("LB",1,(255,0,0)),(900,210))
     
+    draw_rect(WindowSurface,(10,230,1180,175),(0,100,250),25,3) #Load Rect
+    draw_rect(WindowSurface,(1205,230,700,175),(0,100,250),25,3)# displacement Rect
+    
     
     
     runProgram = 1
@@ -185,7 +188,7 @@ def Main():
     tp = 0.0
     td = 0.0
     PGA = 0
-    f = open("/home/ben/Bridge_Tester/Python/times.csv","w")
+    #f = open("/home/ben/Bridge_Tester/Python/times.csv","w")
     while runProgram:
         #WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
         # Process events
@@ -239,16 +242,15 @@ def Main():
             timev = time.time()
             charttimes = Draw_Chart(WindowSurface,10,420,1180,600,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.05,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,255,255),1,(0,100,255),3,"{0:.2f} LB","{0:.3f}\"",MLfont)
         #Draw
-        pygame.draw.rect(WindowSurface,(0,0,0),(10,230,800,175)) # Blank load
-        draw_rect(WindowSurface,(10,230,1180,175),(0,100,250),25,3) #Load Rect
+        
+        pygame.draw.rect(WindowSurface,(0,0,0),(35,235,820,165)) # Blank load
         WindowSurface.blit(forceFont.render("{0:>9}".format(int(Load[0])),1,(255,0,0)),(10,210)) #Load
-        
-        
-        pygame.draw.rect(WindowSurface,(0,0,0),(1205,230,700,175)) #Blank Displacement
-        draw_rect(WindowSurface,(1205,230,700,175),(0,100,250),25,3)# displacement Rect
+        pygame.draw.rect(WindowSurface,(0,0,0),(1230,235,650,165)) #Blank Displacement. This line may need tweaking.
         WindowSurface.blit(forceFont.render("{0:>7.2f}\"".format(td),1,(255,0,0)),(1175,210)) #Displacement
+        
+        
         pygame.display.update()
-    f.close()
+    #f.close()
     pygame.quit()
 
 timev = 0
