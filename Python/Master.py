@@ -90,7 +90,7 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     yscale = -(vsize-25)/DataHeightY
     maxVal = 0
     maxInd = 0
-    pygame.draw.rect(surface,(0,0,0),(x-25,y,hsize+50,vsize+50))
+    pygame.draw.rect(surface,(0,0,0),(x-25,y,hsize+50,vsize+25))
     if border >= 1:
         draw_rect(surface,(x,y,hsize,vsize),bordercolor,25,3)
     lines = []
@@ -178,8 +178,10 @@ def Main():
     draw_rect(WindowSurface,(10,230,1180,175),(0,100,250),25,3) #Load Rect
     draw_rect(WindowSurface,(1205,230,700,175),(0,100,250),25,3)# displacement Rect
     
+    draw_rect(WindowSurface,(1205,420,700,600),(0,100,250),25,3)# displacement Rect
     
-    
+
+
     runProgram = 1
     mousex, mousey = 0,0
     lines = []
@@ -247,7 +249,8 @@ def Main():
         WindowSurface.blit(forceFont.render("{0:>9}".format(int(Load[0])),1,(255,0,0)),(10,210)) #Load
         pygame.draw.rect(WindowSurface,(0,0,0),(1230,235,650,165)) #Blank Displacement. This line may need tweaking.
         WindowSurface.blit(forceFont.render("{0:>7.2f}\"".format(td),1,(255,0,0)),(1175,210)) #Displacement
-        
+
+        pygame.draw.lines(WindowSurface,(0,100,255),0,((1230, 1020), (1205, 995), (1205, 445), (1230, 420)),3) # Fix overwrite
         
         pygame.display.update()
     #f.close()
