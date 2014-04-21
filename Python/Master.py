@@ -90,7 +90,7 @@ def Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax)
     yscale = -(vsize-25)/DataHeightY
     maxVal = 0
     maxInd = 0
-    pygame.draw.rect(surface,(0,0,0),(x-25,y-25,hsize+50,vsize+50))
+    pygame.draw.rect(surface,(0,0,0),(x-25,y,hsize+50,vsize+50))
     if border >= 1:
         draw_rect(surface,(x,y,hsize,vsize),bordercolor,25,3)
     lines = []
