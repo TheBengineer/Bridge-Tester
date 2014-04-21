@@ -166,7 +166,8 @@ def Main():
     font = pygame.font.Font("freesansbold.ttf",12)
     forceFont = pygame.font.Font("freesansbold.ttf",200)
     MLfont = pygame.font.Font("freesansbold.ttf",30)
-    
+    GTfont = pygame.font.Font("freesansbold.ttf",75)
+    Gfont = pygame.font.Font("freesansbold.ttf",60)
     ######### Static Draw
     
     draw_rect(WindowSurface,(10,40,1180,175),(0,100,250),25,3) # max load
@@ -179,7 +180,9 @@ def Main():
     draw_rect(WindowSurface,(1205,230,700,175),(0,100,250),25,3)# displacement Rect
     
     draw_rect(WindowSurface,(1205,420,700,600),(0,100,250),25,3)# displacement Rect
-    
+    #WindowSurface.blit(Gfont.render("Dedicated to",1,(255,255,255)),(1380,420))# Reynolds
+    #WindowSurface.blit(GTfont.render("Gordon Reynolds",1,(255,255,255)),(1240,480))# Reynolds
+    #WindowSurface.blit(Gfont.render("Placeholder ",1,(255,255,255)),(1230,580))# Reynolds
 
 
     runProgram = 1
