@@ -254,15 +254,13 @@ def Main():
             DataLen = len(lines)
             DataHeightX = clamp(Dist[0],Dist[1]+.05,300000)-Dist[1]
             DataHeightY = clamp(Load[0],Load[1]+.05,300000)-Load[1]
-            # xscale = (hsize+1)/DataLen
-            # xscale2 = (hsize)/DataHeightX
-            # yscale = -(vsize-25)/DataHeightY
-            # maxVal = 0
-            # maxInd = 0
-            # pygame.draw.rect(surface,(0,0,0),(x-25,y,hsize+50,vsize+25))
-            # if border >= 1:
-                # draw_rect(surface,(x,y,hsize,vsize),bordercolor,25,3)
-            # lines = []
+            xscale2 = 1180/DataHeightX
+            yscale = -575/DataHeightY
+            maxVal = 0
+            maxInd = 0
+            pygame.draw.rect(WindowSurface,(0,0,0),(0,420,1230,625)) # Draw Black
+            pygame.draw.lines(WindowSurface,(0,100,255),0,((35, 420), (1165, 420), (1190, 445), (1190, 995), (1165, 1020), (35, 1020), (10, 995), (10, 445), (35, 420)),3)
+            scaled = []
             # for j in range(DataLen):
                 # i = dataset[j+DataStart]
                 # if i[1] > maxVal:
