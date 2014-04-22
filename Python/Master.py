@@ -216,6 +216,7 @@ def Main():
                     break
                 if event.key == K_RIGHT:
                     lines = []
+                    linesAvg = []
                     Load = [0,50000]
                     Dist = [0,50000]
                     tclass.DTare = tclass.lastDistance+tclass.DTare
@@ -279,7 +280,7 @@ def Main():
                 scaled.append((10+((lines[j][0]-Dist[1])*xscale2),1020+((lines[j][1]-Load[1])*yscale)))
                 scaled2.append((10+((linesAvg[j][0]-Dist[1])*xscale2),1020+((linesAvg[j][1]-Load[1])*yscale)))
             pygame.draw.lines(WindowSurface,(255,255,255),0,scaled,1)
-            pygame.draw.lines(WindowSurface,(255,255,255),0,scaled2,1)
+            pygame.draw.lines(WindowSurface,(0,255,255),0,scaled2,1)
             px,py = (10+((lines[maxInd][0]-Dist[1])*xscale2),1020+((lines[maxInd][1]-Load[1])*yscale))
             if px > 600: #"{0:.2f} LB","{0:.3f}\""
                 draw_tag2(WindowSurface,(px,py),1,(255,255,255),(255,0,0),MLfont,"{0:.2f} LB".format(lines[maxInd][1]),"{0:.3f}\"".format(lines[maxInd][0]))
