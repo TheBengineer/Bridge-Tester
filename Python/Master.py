@@ -169,6 +169,8 @@ def Main():
     GTfont = pygame.font.Font("freesansbold.ttf",75)
     Gfont = pygame.font.Font("freesansbold.ttf",60)
     ######### Static Draw
+    displacementLimit = 2.1
+    loadOver = 0
     
     draw_rect(WindowSurface,(10,40,1180,175),(0,100,250),25,3) # max load
     WindowSurface.blit(forceFont.render("MAX LOAD",1,(255,255,255)),(72,20))
@@ -191,6 +193,7 @@ def Main():
     runProgram = 1
     mousex, mousey = 0,0
     lines = []
+    linesAvg = []
     Load = [0,50000]
     Dist = [0,50000]
     tp = 0.0
@@ -245,7 +248,13 @@ def Main():
                 if td < Dist[1]:
                     Dist[1] = td
                 #print Dist, Load
-            lines.append([td,tp])
+                if tp > 20:
+                    lines.append([td,tp])
+                    linesAvg.append([td,pressures/readings])
+                
+        pygame.draw.rect(WindowSurface,(0,0,0),(0,420,1230,625)) # Draw Black
+        ######### Boarder
+        pygame.draw.lines(WindowSurface,(0,100,255),0,((35, 420), (1165, 420), (1190, 445), (1190, 995), (1165, 1020), (35, 1020), (10, 995), (10, 445), (35, 420)),3)
         if len(lines)>2:
             timev = time.time()
             #charttimes = Draw_Chart(WindowSurface,10,420,1180,600,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.05,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,255,255),1,(0,100,255),3,"{0:.2f} LB","{0:.3f}\"",MLfont)
@@ -261,18 +270,27 @@ def Main():
             ######### Boarder
             pygame.draw.lines(WindowSurface,(0,100,255),0,((35, 420), (1165, 420), (1190, 445), (1190, 995), (1165, 1020), (35, 1020), (10, 995), (10, 445), (35, 420)),3)
             scaled = []
+            scaled2 = []
             ################ Compute Scale
             for j in range(len(lines)):
                 if lines[j][1] > maxVal:
                     maxVal = lines[j][1]
                     maxInd = j
                 scaled.append((10+((lines[j][0]-Dist[1])*xscale2),1020+((lines[j][1]-Load[1])*yscale)))
+                scaled2.append((10+((linesAvg[j][0]-Dist[1])*xscale2),1020+((linesAvg[j][1]-Load[1])*yscale)))
             pygame.draw.lines(WindowSurface,(255,255,255),0,scaled,1)
+            pygame.draw.lines(WindowSurface,(255,255,255),0,scaled2,1)
             px,py = (10+((lines[maxInd][0]-Dist[1])*xscale2),1020+((lines[maxInd][1]-Load[1])*yscale))
             if px > 600: #"{0:.2f} LB","{0:.3f}\""
                 draw_tag2(WindowSurface,(px,py),1,(255,255,255),(255,0,0),MLfont,"{0:.2f} LB".format(lines[maxInd][1]),"{0:.3f}\"".format(lines[maxInd][0]))
             else:
                 draw_tag2(WindowSurface,(px,py),0,(255,255,255),(255,0,0),MLfont,"{0:.2f} LB".format(lines[maxInd][1]),"{0:.3f}\"".format(lines[maxInd][0]))
+            px,py = (10+((lines[-1][0]-Dist[1])*xscale2),1020+((lines[-1][1]-Load[1])*yscale))
+            if px > 600:
+                draw_tag(WindowSurface,(px,py),1,(255,255,255),(0,100,255),MLfont,"{0:.2f} LB".format(lines[-1][1]))
+            else:
+                draw_tag(WindowSurface,(px,py),0,(255,255,255),(0,100,255),MLfont,"{0:.2f} LB".format(lines[-1][1]))
+            
             px,py = (10+((lines[-1][0]-Dist[1])*xscale2),1020+((lines[-1][1]-Load[1])*yscale))
             if px > 600:
                 draw_tag(WindowSurface,(px,py),1,(255,255,255),(0,100,255),MLfont,"{0:.2f} LB".format(lines[-1][1]))
