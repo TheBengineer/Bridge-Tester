@@ -188,7 +188,6 @@ def Main():
     #WindowSurface.blit(Gfont.render("Vermont Technical",1,(255,255,255)),(1290,840))# Reynolds
     #WindowSurface.blit(Gfont.render("College",1,(255,255,255)),(1445,900))# Reynolds
 
-
     runProgram = 1
     mousex, mousey = 0,0
     lines = []
@@ -259,28 +258,26 @@ def Main():
             maxVal = 0
             maxInd = 0
             pygame.draw.rect(WindowSurface,(0,0,0),(0,420,1230,625)) # Draw Black
+            ######### Boarder
             pygame.draw.lines(WindowSurface,(0,100,255),0,((35, 420), (1165, 420), (1190, 445), (1190, 995), (1165, 1020), (35, 1020), (10, 995), (10, 445), (35, 420)),3)
             scaled = []
-            # for j in range(DataLen):
-                # i = dataset[j+DataStart]
-                # if i[1] > maxVal:
-                    # maxVal = i[1]
-                    # maxInd = j
-                # lines.append((x+((i[0]-DXMin)*xscale2),y+vsize+((i[1]-DYMin)*yscale)))
-            # pygame.draw.lines(surface,color,0,lines,stroke)
-            # c = (255,255,255)
-            # tc = (255,0,0)
-            # px,py = (x+((dataset[maxInd][0]-DXMin)*xscale2),y+vsize+((dataset[maxInd][1]-DYMin)*yscale))
-            # if px > hsize/2:
-                # draw_tag2(surface,(px,py),1,c,tc,MLfont,stringFormat.format(dataset[maxInd][1]),stringFormat2.format(dataset[maxInd][0]))
-            # else:
-                # draw_tag2(surface,(px,py),0,c,tc,MLfont,stringFormat.format(dataset[maxInd][1]),stringFormat2.format(dataset[maxInd][0]))
-            # tc = (0,100,255)
-            # px,py = (x+((dataset[-1][0]-DXMin)*xscale2),y+vsize+((dataset[-1][1]-DYMin)*yscale))
-            # if px > hsize/2:
-                # draw_tag(surface,(px,py),1,c,tc,MLfont,stringFormat.format(dataset[-1][1]))
-            # else:
-                # draw_tag(surface,(px,py),0,c,tc,MLfont,stringFormat.format(dataset[-1][1]))
+            ################ Compute Scale
+            for j in range(len(lines)):
+                if lines[j][1] > maxVal:
+                    maxVal = lines[j][1]
+                    maxInd = j
+                scaled.append((10+((lines[j][0]-Dist[1])*xscale2),1020+((lines[j][1]-Load[1])*yscale)))
+            pygame.draw.lines(WindowSurface,(255,255,255),0,lines,1)
+            px,py = (10+((scaled[maxInd][0]-Dist[1])*xscale2),1020+((scaled[maxInd][1]-Load[1])*yscale))
+            if px > 600: #"{0:.2f} LB","{0:.3f}\""
+                draw_tag2(WindowSurface,(px,py),1,(255,255,255),(255,0,0),MLfont,"{0:.2f} LB".format(scaled[maxInd][1]),"{0:.3f}\"".format(scaled[maxInd][0]))
+            else:
+                draw_tag2(WindowSurface,(px,py),0,(255,255,255),(255,0,0),MLfont,"{0:.2f} LB".format(scaled[maxInd][1]),"{0:.3f}\"".format(scaled[maxInd][0]))
+            px,py = (10+((scaled[-1][0]-Dist[1])*xscale2),1020+((scaled[-1][1]-Load[1])*yscale))
+            if px > 600:
+                draw_tag(WindowSurface,(px,py),1,(255,255,255),(0,100,255),MLfont,"{0:.2f} LB".format(scaled[-1][1]))
+            else:
+                draw_tag(WindowSurface,(px,py),0,(255,255,255),(0,100,255),MLfont,"{0:.2f} LB".format(scaled[-1][1]))
         
         pygame.draw.rect(WindowSurface,(0,0,0),(35,235,820,165)) # Blank load
         WindowSurface.blit(forceFont.render("{0:>9}".format(int(Load[0])),1,(255,0,0)),(10,210)) #Load
