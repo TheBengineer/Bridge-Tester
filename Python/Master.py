@@ -252,7 +252,7 @@ def Main():
             # Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax),(DYMin,DYMax),color,stroke,bordercolor,border,stringFormat,stringFormat2,MLfont):
             DataLen = len(lines)
             DataHeightX = clamp(Dist[0],Dist[1]+.05,300000)-Dist[1]
-            DataHeightY = clamp(Load[0],Load[1]+.05,300000)-Load[1]
+            DataHeightY = clamp(Load[0],Load[1]+80,300000)-Load[1]
             xscale2 = 1180/DataHeightX
             yscale = -575/DataHeightY
             maxVal = 0
@@ -267,17 +267,17 @@ def Main():
                     maxVal = lines[j][1]
                     maxInd = j
                 scaled.append((10+((lines[j][0]-Dist[1])*xscale2),1020+((lines[j][1]-Load[1])*yscale)))
-            pygame.draw.lines(WindowSurface,(255,255,255),0,lines,1)
-            px,py = (10+((scaled[maxInd][0]-Dist[1])*xscale2),1020+((scaled[maxInd][1]-Load[1])*yscale))
+            pygame.draw.lines(WindowSurface,(255,255,255),0,scaled,1)
+            px,py = (10+((lines[maxInd][0]-Dist[1])*xscale2),1020+((lines[maxInd][1]-Load[1])*yscale))
             if px > 600: #"{0:.2f} LB","{0:.3f}\""
-                draw_tag2(WindowSurface,(px,py),1,(255,255,255),(255,0,0),MLfont,"{0:.2f} LB".format(scaled[maxInd][1]),"{0:.3f}\"".format(scaled[maxInd][0]))
+                draw_tag2(WindowSurface,(px,py),1,(255,255,255),(255,0,0),MLfont,"{0:.2f} LB".format(lines[maxInd][1]),"{0:.3f}\"".format(lines[maxInd][0]))
             else:
-                draw_tag2(WindowSurface,(px,py),0,(255,255,255),(255,0,0),MLfont,"{0:.2f} LB".format(scaled[maxInd][1]),"{0:.3f}\"".format(scaled[maxInd][0]))
-            px,py = (10+((scaled[-1][0]-Dist[1])*xscale2),1020+((scaled[-1][1]-Load[1])*yscale))
+                draw_tag2(WindowSurface,(px,py),0,(255,255,255),(255,0,0),MLfont,"{0:.2f} LB".format(lines[maxInd][1]),"{0:.3f}\"".format(lines[maxInd][0]))
+            px,py = (10+((lines[-1][0]-Dist[1])*xscale2),1020+((lines[-1][1]-Load[1])*yscale))
             if px > 600:
-                draw_tag(WindowSurface,(px,py),1,(255,255,255),(0,100,255),MLfont,"{0:.2f} LB".format(scaled[-1][1]))
+                draw_tag(WindowSurface,(px,py),1,(255,255,255),(0,100,255),MLfont,"{0:.2f} LB".format(lines[-1][1]))
             else:
-                draw_tag(WindowSurface,(px,py),0,(255,255,255),(0,100,255),MLfont,"{0:.2f} LB".format(scaled[-1][1]))
+                draw_tag(WindowSurface,(px,py),0,(255,255,255),(0,100,255),MLfont,"{0:.2f} LB".format(lines[-1][1]))
         
         pygame.draw.rect(WindowSurface,(0,0,0),(35,235,820,165)) # Blank load
         WindowSurface.blit(forceFont.render("{0:>9}".format(int(Load[0])),1,(255,0,0)),(10,210)) #Load
