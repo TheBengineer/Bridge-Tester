@@ -249,8 +249,40 @@ def Main():
             lines.append([td,tp])
         if len(lines)>2:
             timev = time.time()
-            charttimes = Draw_Chart(WindowSurface,10,420,1180,600,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.05,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,255,255),1,(0,100,255),3,"{0:.2f} LB","{0:.3f}\"",MLfont)
-        #Draw
+            #charttimes = Draw_Chart(WindowSurface,10,420,1180,600,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.05,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,255,255),1,(0,100,255),3,"{0:.2f} LB","{0:.3f}\"",MLfont)
+            # Draw_Chart(surface,x,y,hsize,vsize,dataset,(DataStart,DataEnd),(DXMin,DXMax),(DYMin,DYMax),color,stroke,bordercolor,border,stringFormat,stringFormat2,MLfont):
+            DataLen = len(lines)
+            DataHeightX = clamp(Dist[0],Dist[1]+.05,300000)-Dist[1]
+            DataHeightY = clamp(Load[0],Load[1]+.05,300000)-Load[1]
+            # xscale = (hsize+1)/DataLen
+            # xscale2 = (hsize)/DataHeightX
+            # yscale = -(vsize-25)/DataHeightY
+            # maxVal = 0
+            # maxInd = 0
+            # pygame.draw.rect(surface,(0,0,0),(x-25,y,hsize+50,vsize+25))
+            # if border >= 1:
+                # draw_rect(surface,(x,y,hsize,vsize),bordercolor,25,3)
+            # lines = []
+            # for j in range(DataLen):
+                # i = dataset[j+DataStart]
+                # if i[1] > maxVal:
+                    # maxVal = i[1]
+                    # maxInd = j
+                # lines.append((x+((i[0]-DXMin)*xscale2),y+vsize+((i[1]-DYMin)*yscale)))
+            # pygame.draw.lines(surface,color,0,lines,stroke)
+            # c = (255,255,255)
+            # tc = (255,0,0)
+            # px,py = (x+((dataset[maxInd][0]-DXMin)*xscale2),y+vsize+((dataset[maxInd][1]-DYMin)*yscale))
+            # if px > hsize/2:
+                # draw_tag2(surface,(px,py),1,c,tc,MLfont,stringFormat.format(dataset[maxInd][1]),stringFormat2.format(dataset[maxInd][0]))
+            # else:
+                # draw_tag2(surface,(px,py),0,c,tc,MLfont,stringFormat.format(dataset[maxInd][1]),stringFormat2.format(dataset[maxInd][0]))
+            # tc = (0,100,255)
+            # px,py = (x+((dataset[-1][0]-DXMin)*xscale2),y+vsize+((dataset[-1][1]-DYMin)*yscale))
+            # if px > hsize/2:
+                # draw_tag(surface,(px,py),1,c,tc,MLfont,stringFormat.format(dataset[-1][1]))
+            # else:
+                # draw_tag(surface,(px,py),0,c,tc,MLfont,stringFormat.format(dataset[-1][1]))
         
         pygame.draw.rect(WindowSurface,(0,0,0),(35,235,820,165)) # Blank load
         WindowSurface.blit(forceFont.render("{0:>9}".format(int(Load[0])),1,(255,0,0)),(10,210)) #Load
