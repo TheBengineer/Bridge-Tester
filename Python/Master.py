@@ -46,7 +46,7 @@ class IOThread(Thread):
         self.fps = 0
         self.lasttime = time.time()
         self.calibration = 0.929373554
-        self.calibrationOffset = 26
+        self.calibrationOffset = 46
         if pi == 1: # running on a Pi?
             self.bus = self.initI2C(self.pressureAddress,self.distanceAddress)
     def initI2C(self,pressureA,distanceA):
@@ -193,7 +193,6 @@ def Main():
     runProgram = 1
     mousex, mousey = 0,0
     lines = []
-    linesAvg = []
     Load = [0,50000]
     Dist = [0,50000]
     tp = 0.0
@@ -216,7 +215,6 @@ def Main():
                     break
                 if event.key == K_RIGHT:
                     lines = []
-                    linesAvg = []
                     loadOver = 0
                     Load = [0,50000]
                     Dist = [0,50000]
@@ -238,8 +236,8 @@ def Main():
                 distances += tmpAr[1]
                 maxPressure = max(tmpAr[0],maxPressure)
             if readings > 0:
-                #tp = pressures/readings #Averages
-                tp = maxPressure #Max
+                tp = pressures/readings #Averages
+                #tp = maxPressure #Max
                 td = distances/readings
                 if tp > Load[0]:
                     Load[0] = tp
@@ -252,7 +250,8 @@ def Main():
                 #print Dist, Load
                 if tp > 20: # This is messy
                     lines.append([td,tp])
-                    linesAvg.append([td,pressures/readings])
+                    #linesAvg.append([td,pressures/readings])
+                    #lines.append([td,pressures/readings]) # Averaging
                 if td >displacementLimit and loadOver == 0:
                     loadOver = Load[0]
                     
@@ -274,16 +273,13 @@ def Main():
             ######### Boarder
             pygame.draw.lines(WindowSurface,(0,100,255),0,((35, 420), (1165, 420), (1190, 445), (1190, 995), (1165, 1020), (35, 1020), (10, 995), (10, 445), (35, 420)),3)
             scaled = []
-            scaled2 = []
             ################ Compute Scale
             for j in range(len(lines)):
                 if lines[j][1] > maxVal:
                     maxVal = lines[j][1]
                     maxInd = j
                 scaled.append((10+((lines[j][0]-Dist[1])*xscale2),1020+((lines[j][1]-Load[1])*yscale)))
-                scaled2.append((10+((linesAvg[j][0]-Dist[1])*xscale2),1020+((linesAvg[j][1]-Load[1])*yscale)))
             pygame.draw.lines(WindowSurface,(255,255,255),0,scaled,1)
-            pygame.draw.lines(WindowSurface,(0,255,255),0,scaled2,1)
             px,py = (10+((lines[maxInd][0]-Dist[1])*xscale2),1020+((lines[maxInd][1]-Load[1])*yscale))
             if px > 600: #"{0:.2f} LB","{0:.3f}\""
                 draw_tag2(WindowSurface,(px,py),1,(255,255,255),(255,0,0),MLfont,"{0:.2f} LB".format(lines[maxInd][1]),"{0:.3f}\"".format(lines[maxInd][0]))
