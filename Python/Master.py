@@ -217,6 +217,7 @@ def Main():
                 if event.key == K_RIGHT:
                     lines = []
                     linesAvg = []
+                    loadOver = 0
                     Load = [0,50000]
                     Dist = [0,50000]
                     tclass.DTare = tclass.lastDistance+tclass.DTare
@@ -249,10 +250,12 @@ def Main():
                 if td < Dist[1]:
                     Dist[1] = td
                 #print Dist, Load
-                if tp > 20:
+                if tp > 20: # This is messy
                     lines.append([td,tp])
                     linesAvg.append([td,pressures/readings])
-                
+                if td >displacementLimit and loadOver == 0:
+                    loadOver = Load[0]
+                    
         pygame.draw.rect(WindowSurface,(0,0,0),(0,420,1230,625)) # Draw Black
         ######### Boarder
         pygame.draw.lines(WindowSurface,(0,100,255),0,((35, 420), (1165, 420), (1190, 445), (1190, 995), (1165, 1020), (35, 1020), (10, 995), (10, 445), (35, 420)),3)
@@ -291,12 +294,12 @@ def Main():
                 draw_tag(WindowSurface,(px,py),1,(255,255,255),(0,100,255),MLfont,"{0:.2f} LB".format(lines[-1][1]))
             else:
                 draw_tag(WindowSurface,(px,py),0,(255,255,255),(0,100,255),MLfont,"{0:.2f} LB".format(lines[-1][1]))
-            
-            px,py = (10+((lines[-1][0]-Dist[1])*xscale2),1020+((lines[-1][1]-Load[1])*yscale))
-            if px > 600:
-                draw_tag(WindowSurface,(px,py),1,(255,255,255),(0,100,255),MLfont,"{0:.2f} LB".format(lines[-1][1]))
-            else:
-                draw_tag(WindowSurface,(px,py),0,(255,255,255),(0,100,255),MLfont,"{0:.2f} LB".format(lines[-1][1]))
+            if loadOver >0:
+                px,py = (10+((displacementLimit-Dist[1])*xscale2),1020+((loadOver-Load[1])*yscale))
+                if px > 600:
+                    draw_tag2(WindowSurface,(px,py),1,(255,255,255),(255,200,0),MLfont,"{0:.2f} LB".format(loadOver),"{0:.3f}\"".format(displacementLimit))
+                else:
+                    draw_tag2(WindowSurface,(px,py),0,(255,255,255),(255,200,0),MLfont,"{0:.2f} LB".format(loadOver),"{0:.3f}\"".format(displacementLimit))
         
         pygame.draw.rect(WindowSurface,(0,0,0),(35,235,820,165)) # Blank load
         WindowSurface.blit(forceFont.render("{0:>9}".format(int(Load[0])),1,(255,0,0)),(10,210)) #Load
