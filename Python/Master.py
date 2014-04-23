@@ -248,8 +248,8 @@ def Main():
                 if td < Dist[1]:
                     Dist[1] = td
                 #print Dist, Load
-                if tp > 20: # This is messy
-                    lines.append([td,tp])
+                #if tp > 1: # This is messy
+                lines.append([td,tp])
                     #linesAvg.append([td,pressures/readings])
                     #lines.append([td,pressures/readings]) # Averaging
                 if td >displacementLimit and loadOver == 0:
@@ -298,7 +298,7 @@ def Main():
                     draw_tag2(WindowSurface,(px,py),0,(255,255,255),(255,200,0),MLfont,"{0:.2f} LB".format(loadOver),"{0:.3f}\"".format(displacementLimit))
         
         pygame.draw.rect(WindowSurface,(0,0,0),(35,235,820,165)) # Blank load
-        WindowSurface.blit(forceFont.render("{0:>9}".format(int(Load[0])),1,(255,0,0)),(10,210)) #Load
+        WindowSurface.blit(forceFont.render("{:>9.0f}".format(Load[0]),1,(255,0,0)),(10,210)) #Load
         pygame.draw.rect(WindowSurface,(0,0,0),(1230,235,650,165)) #Blank Displacement. This line may need tweaking.
         WindowSurface.blit(forceFont.render("{0:>7.2f}\"".format(td),1,(255,0,0)),(1175,210)) #Displacement
 
