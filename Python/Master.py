@@ -308,15 +308,24 @@ def Main():
                 limit = 100
             else:
                 limit = 50
+            ######## Vertical Graph
             i = Load[1]+(limit-(Load[1]%limit))
-            pixy = 1020+((Load[1])*yscale)
-            pygame.draw.line(WindowSurface,(0,255,0),[13,pixy],[25,pixy])
-            WindowSurface.blit(AxisFont.render("{:>5.0f} LB".format(Load[1]),1,(0,255,0)),(25,pixy)) #Bottom label
+            pygame.draw.line(WindowSurface,(0,255,0),[13,1020],[25,1020])
+            WindowSurface.blit(AxisFont.render("{:>5.0f} LB".format(Load[1]),1,(0,255,0)),(25,1015)) #Bottom label
             while i < Load[0]:
                 pixy = 1020+((i-Load[1])*yscale)
                 pygame.draw.line(WindowSurface,(0,255,0),[13,pixy],[25,pixy])
-                WindowSurface.blit(AxisFont.render("{:>5.0f} LB".format(i),1,(0,255,0)),(25,pixy)) #Axis labels
+                WindowSurface.blit(AxisFont.render("{:>5.0f} LB".format(i),1,(0,255,0)),(25,pixy-5)) #Axis labels
                 i += limit
+            ######## Horizontal Graph
+            i = Dist[1]+(.5-(Dist[1]%.5))
+            pygame.draw.line(WindowSurface,(0,255,0),[10,1020],[10,1035])
+            while i < Dist[0]:
+                pixx = 10+((i-Dist[1])*xscale2)
+                pygame.draw.line(WindowSurface,(0,255,0),[pixx,1026],[pixx,1035])
+                WindowSurface.blit(AxisFont.render("{:>2.1f}\"".format(i),1,(0,255,0)),(pixx-10,1037)) #Axis labels
+                i += .5
+            WindowSurface.blit(AxisFont.render("{:>2.1f}\"".format(Dist[1]),1,(200,255,200)),(10,1037)) #Bottom label
                 
         pygame.draw.rect(WindowSurface,(0,0,0),(35,235,820,165)) # Blank load
         WindowSurface.blit(forceFont.render("{:>9.0f}".format(Load[0]),1,(255,0,0)),(10,210)) #Load
