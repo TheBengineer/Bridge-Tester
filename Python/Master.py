@@ -219,6 +219,10 @@ def Main():
                     tclass.error = 1
                     os.system("sudo shutdown now")
                     break
+                if event.key == K_q:
+                    runProgram = 0
+                    tclass.error = 1
+                    break
                 if event.key == K_SPACE:
                     lines = []
                     loadOver = 0
