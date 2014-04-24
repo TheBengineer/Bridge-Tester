@@ -192,14 +192,18 @@ def Main():
     #WindowSurface.blit(Gfont.render("College",1,(255,255,255)),(1445,900))# Reynolds
 
     runProgram = 1
-    mousex, mousey = 0,0
+    time.sleep(.5)#warmup
     lines = []
+    loadOver = 0
     Load = [0,50000]
     Dist = [0,50000]
+    tclass.DTare = tclass.lastDistance+tclass.DTare
+    tclass.PTare = tclass.lastPressure+tclass.PTare
     tp = 0.0
     td = 0.0
-    PGA = 0
-    #f = open("/home/ben/Bridge_Tester/Python/times.csv","w")
+    time.sleep(.1)
+    tclass.pressureArray = [] # clear saved pressures
+    
     while runProgram:
         #WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
         # Process events
@@ -213,8 +217,9 @@ def Main():
                 if event.key == K_ESCAPE:
                     runProgram = 0
                     tclass.error = 1
+                    os.system("sudo shutdown now")
                     break
-                if event.key == K_RIGHT:
+                if event.key == K_SPACE:
                     lines = []
                     loadOver = 0
                     Load = [0,50000]
