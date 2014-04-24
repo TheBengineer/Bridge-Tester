@@ -168,6 +168,7 @@ def Main():
     MLfont = pygame.font.Font("freesansbold.ttf",30)
     GTfont = pygame.font.Font("freesansbold.ttf",75)
     Gfont = pygame.font.Font("freesansbold.ttf",60)
+    AxisFont = pygame.font.Font("freesansbold.ttf",10)
     ######### Static Draw
     displacementLimit = 2.1
     loadOver = 0
@@ -181,7 +182,7 @@ def Main():
     draw_rect(WindowSurface,(10,230,1180,175),(0,100,250),25,3) #Load Rect
     draw_rect(WindowSurface,(1205,230,700,175),(0,100,250),25,3)# displacement Rect
     
-    draw_rect(WindowSurface,(1205,420,700,600),(0,100,250),25,3)# displacement Rect
+    draw_rect(WindowSurface,(1205,420,700,625),(0,100,250),25,3)# Dedication Rect
     #WindowSurface.blit(Gfont.render("Dedicated To",1,(255,255,255)),(1380,420))# Reynolds
     #WindowSurface.blit(GTfont.render("Gordon Reynolds",1,(255,255,255)),(1240,480))# Reynolds
     #WindowSurface.blit(Gfont.render("For his many years of",1,(255,255,255)),(1245,620))# Reynolds
@@ -271,7 +272,8 @@ def Main():
             maxInd = 0
             pygame.draw.rect(WindowSurface,(0,0,0),(0,420,1230,625)) # Draw Black
             ######### Boarder
-            pygame.draw.lines(WindowSurface,(0,100,255),0,((35, 420), (1165, 420), (1190, 445), (1190, 995), (1165, 1020), (35, 1020), (10, 995), (10, 445), (35, 420)),3)
+            #pygame.draw.lines(WindowSurface,(0,100,255),0,((35, 420), (1165, 420), (1190, 445), (1190, 995), (1165, 1020), (35, 1020), (10, 995), (10, 445), (35, 420)),3)
+            pygame.draw.lines(WindowSurface,(0,100,255),0,((35, 420), (1165, 420), (1190, 445), (1190, 1020), (1165, 1046), (35, 1046), (10, 1020), (10, 445), (35, 420)),3)
             scaled = []
             ################ Compute Scale
             for j in range(len(lines)):
@@ -296,13 +298,32 @@ def Main():
                     draw_tag2(WindowSurface,(px,py),1,(255,255,255),(255,200,0),MLfont,"{0:.2f} LB".format(loadOver),"{0:.3f}\"".format(displacementLimit))
                 else:
                     draw_tag2(WindowSurface,(px,py),0,(255,255,255),(255,200,0),MLfont,"{0:.2f} LB".format(loadOver),"{0:.3f}\"".format(displacementLimit))
-        
+            if DataHeightY > 50000:
+                limit = 5000
+            if DataHeightY > 10000:
+                limit = 1000
+            elif DataHeightY > 5000:
+                limit = 500
+            elif DataHeightY > 1000:
+                limit = 100
+            else:
+                limit = 50
+            i = Load[1]+(limit-(Load[1]%limit))
+            pixy = 1020+((Load[1])*yscale)
+            pygame.draw.line(WindowSurface,(0,255,0),[13,pixy],[25,pixy])
+            WindowSurface.blit(AxisFont.render("{:>5.0f} LB".format(Load[1]),1,(0,255,0)),(25,pixy)) #Bottom label
+            while i < Load[0]:
+                pixy = 1020+((i-Load[1])*yscale)
+                pygame.draw.line(WindowSurface,(0,255,0),[13,pixy],[25,pixy])
+                WindowSurface.blit(AxisFont.render("{:>5.0f} LB".format(i),1,(0,255,0)),(25,pixy)) #Axis labels
+                i += limit
+                
         pygame.draw.rect(WindowSurface,(0,0,0),(35,235,820,165)) # Blank load
         WindowSurface.blit(forceFont.render("{:>9.0f}".format(Load[0]),1,(255,0,0)),(10,210)) #Load
         pygame.draw.rect(WindowSurface,(0,0,0),(1230,235,650,165)) #Blank Displacement. This line may need tweaking.
         WindowSurface.blit(forceFont.render("{0:>7.2f}\"".format(td),1,(255,0,0)),(1175,210)) #Displacement
 
-        pygame.draw.lines(WindowSurface,(0,100,255),0,((1230, 1020), (1205, 995), (1205, 445), (1230, 420)),3) # Fix overwrite
+        pygame.draw.lines(WindowSurface,(0,100,255),0,((1230, 1045), (1205, 1020), (1205, 445), (1230, 420)),3) # Fix overwrite
         
         pygame.display.update()
     #f.close()
