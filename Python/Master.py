@@ -233,6 +233,7 @@ def Main():
                     tp = 0.0
                     td = 0.0
                     time.sleep(.1)
+                    pygame.draw.rect(WindowSurface,(0,0,0),(0,420,1230,700)) # Draw Black
                     tclass.pressureArray = [] # clear saved pressures
         while len(tclass.pressureArray) > 11:
             readings = 0
@@ -265,9 +266,7 @@ def Main():
                 if td >displacementLimit and loadOver == 0:
                     loadOver = Load[0]
                     
-        pygame.draw.rect(WindowSurface,(0,0,0),(0,420,1230,625)) # Draw Black
-        ######### Boarder
-        pygame.draw.lines(WindowSurface,(0,100,255),0,((35, 420), (1165, 420), (1190, 445), (1190, 995), (1165, 1020), (35, 1020), (10, 995), (10, 445), (35, 420)),3)
+        pygame.draw.rect(WindowSurface,(0,0,0),(0,420,1230,650)) # Draw Black
         if len(lines)>2:
             timev = time.time()
             #charttimes = Draw_Chart(WindowSurface,10,420,1180,600,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.05,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,255,255),1,(0,100,255),3,"{0:.2f} LB","{0:.3f}\"",MLfont)
@@ -329,13 +328,19 @@ def Main():
             ######## Horizontal Graph
             i = Dist[1]+(.5-(Dist[1]%.5))
             pygame.draw.line(WindowSurface,(0,255,0),[10,1020],[10,1035])
+            a = 0
             while i < Dist[0]:
                 pixx = 10+((i-Dist[1])*xscale2)
-                pygame.draw.line(WindowSurface,(0,255,0),[pixx,1026],[pixx,1035])
-                WindowSurface.blit(AxisFont.render("{:>2.1f}\"".format(i),1,(0,255,0)),(pixx-10,1037)) #Axis labels
+                pygame.draw.line(WindowSurface,(0,255,0),[pixx,1026],[pixx,1035+a])
+                WindowSurface.blit(AxisFont.render("{:>2.1f}\"".format(i),1,(0,255,0)),(pixx-10,1037+a)) #Axis labels
                 i += .5
-            WindowSurface.blit(AxisFont.render("{:>2.1f}\"".format(Dist[1]),1,(200,255,200)),(10,1037)) #Bottom label
-                
+                a = (a+15)%30
+            WindowSurface.blit(AxisFont.render("{:>2.1f}\"".format(Dist[1]),1,(0,255,0)),(0,1052)) #Bottom label
+        else:
+            pygame.draw.lines(WindowSurface,(0,100,255),0,((35, 420), (1165, 420), (1190, 445), (1190, 1020), (1165, 1046), (35, 1046), (10, 1020), (10, 445), (35, 420)),3)
+            
+            
+            
         pygame.draw.rect(WindowSurface,(0,0,0),(35,235,820,165)) # Blank load
         WindowSurface.blit(forceFont.render("{:>9.0f}".format(Load[0]),1,(255,0,0)),(10,210)) #Load
         pygame.draw.rect(WindowSurface,(0,0,0),(1230,235,650,165)) #Blank Displacement. This line may need tweaking.
