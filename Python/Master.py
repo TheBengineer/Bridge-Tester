@@ -223,6 +223,14 @@ def Main():
                     runProgram = 0
                     tclass.error = 1
                     break
+                if event.key == K_d:
+                    WindowSurface.blit(Gfont.render("Dedicated To",1,(255,255,255)),(1380,420))# Reynolds
+				    WindowSurface.blit(GTfont.render("Gordon Reynolds",1,(255,255,255)),(1240,480))# Reynolds
+				    WindowSurface.blit(Gfont.render("For his many years of",1,(255,255,255)),(1245,620))# Reynolds
+				    WindowSurface.blit(Gfont.render("outstanding service",1,(255,255,255)),(1275,680))# Reynolds
+				    WindowSurface.blit(Gfont.render("for the students of",1,(255,255,255)),(1295,740))# Reynolds
+				    WindowSurface.blit(Gfont.render("Vermont Technical",1,(255,255,255)),(1290,840))# Reynolds
+				    WindowSurface.blit(Gfont.render("College",1,(255,255,255)),(1445,900))# Reynolds
                 if event.key == K_SPACE:
                     lines = []
                     loadOver = 0
@@ -266,7 +274,7 @@ def Main():
                 if td >displacementLimit and loadOver == 0:
                     loadOver = Load[0]
                     
-        pygame.draw.rect(WindowSurface,(0,0,0),(0,420,1230,650)) # Draw Black
+        pygame.draw.rect(WindowSurface,(0,0,0),(0,420,1230,675)) # Draw Black
         if len(lines)>2:
             timev = time.time()
             #charttimes = Draw_Chart(WindowSurface,10,420,1180,600,lines,(0,len(lines)),(Dist[1],clamp(Dist[0],Dist[1]+.05,300000)),(Load[1],clamp(Load[0],Load[1]+80,300000)),(255,255,255),1,(0,100,255),3,"{0:.2f} LB","{0:.3f}\"",MLfont)
