@@ -225,12 +225,12 @@ def Main():
                     break
                 if event.key == K_d:
                     WindowSurface.blit(Gfont.render("Dedicated To",1,(255,255,255)),(1380,420))# Reynolds
-				    WindowSurface.blit(GTfont.render("Gordon Reynolds",1,(255,255,255)),(1240,480))# Reynolds
-				    WindowSurface.blit(Gfont.render("For his many years of",1,(255,255,255)),(1245,620))# Reynolds
-				    WindowSurface.blit(Gfont.render("outstanding service",1,(255,255,255)),(1275,680))# Reynolds
-				    WindowSurface.blit(Gfont.render("for the students of",1,(255,255,255)),(1295,740))# Reynolds
-				    WindowSurface.blit(Gfont.render("Vermont Technical",1,(255,255,255)),(1290,840))# Reynolds
-				    WindowSurface.blit(Gfont.render("College",1,(255,255,255)),(1445,900))# Reynolds
+                    WindowSurface.blit(GTfont.render("Gordon Reynolds",1,(255,255,255)),(1240,480))# Reynolds
+                    WindowSurface.blit(Gfont.render("For his many years of",1,(255,255,255)),(1245,620))# Reynolds
+                    WindowSurface.blit(Gfont.render("outstanding service",1,(255,255,255)),(1275,680))# Reynolds
+                    WindowSurface.blit(Gfont.render("for the students of",1,(255,255,255)),(1295,740))# Reynolds
+                    WindowSurface.blit(Gfont.render("Vermont Technical",1,(255,255,255)),(1290,840))# Reynolds
+                    WindowSurface.blit(Gfont.render("College",1,(255,255,255)),(1445,900))# Reynolds
                 if event.key == K_SPACE:
                     lines = []
                     loadOver = 0
