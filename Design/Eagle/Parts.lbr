@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE eagle SYSTEM "eagle.dtd">
-<eagle version="6.2">
+<eagle version="6.5.0">
 <drawing>
 <settings>
 <setting alwaysvectorfont="no"/>
@@ -502,6 +502,26 @@
 <wire x1="24.13" y1="-2.54" x2="-2.54" y2="-2.54" width="0.127" layer="21"/>
 <wire x1="-2.54" y1="-2.54" x2="-2.54" y2="81.28" width="0.127" layer="21"/>
 </package>
+<package name="ADC">
+<pad name="VDD" x="-11.43" y="0" drill="0.8" diameter="1.778" shape="octagon"/>
+<wire x1="-12.7" y1="-1.27" x2="-13.97" y2="0" width="0.127" layer="21" curve="-90"/>
+<wire x1="-13.97" y1="0" x2="-13.97" y2="10.16" width="0.127" layer="21"/>
+<wire x1="-13.97" y1="10.16" x2="-12.7" y2="11.43" width="0.127" layer="21" curve="-90"/>
+<wire x1="-12.7" y1="11.43" x2="12.7" y2="11.43" width="0.127" layer="21"/>
+<wire x1="12.7" y1="11.43" x2="13.97" y2="10.16" width="0.127" layer="21" curve="-90"/>
+<wire x1="13.97" y1="10.16" x2="13.97" y2="0" width="0.127" layer="21"/>
+<wire x1="13.97" y1="0" x2="12.7" y2="-1.27" width="0.127" layer="21" curve="-90"/>
+<wire x1="12.7" y1="-1.27" x2="-12.7" y2="-1.27" width="0.127" layer="21"/>
+<pad name="GND" x="-8.89" y="0" drill="0.8" diameter="1.778" shape="octagon"/>
+<pad name="SCL" x="-6.35" y="0" drill="0.8" diameter="1.778" shape="octagon"/>
+<pad name="SDA" x="-3.81" y="0" drill="0.8" diameter="1.778" shape="octagon"/>
+<pad name="ADDR" x="-1.27" y="0" drill="0.8" diameter="1.778" shape="octagon"/>
+<pad name="ALRT" x="1.27" y="0" drill="0.8" diameter="1.778" shape="octagon"/>
+<pad name="A0" x="3.81" y="0" drill="0.8" diameter="1.778" shape="octagon"/>
+<pad name="A1" x="6.35" y="0" drill="0.8" diameter="1.778" shape="octagon"/>
+<pad name="A2" x="8.89" y="0" drill="0.8" diameter="1.778" shape="octagon"/>
+<pad name="A3" x="11.43" y="0" drill="0.8" diameter="1.778" shape="octagon"/>
+</package>
 </packages>
 <symbols>
 <symbol name="HD7-A">
@@ -714,6 +734,22 @@
 <wire x1="-2.54" y1="-1.524" x2="0" y2="-4.064" width="0.254" layer="94" curve="90"/>
 <pin name="P$3" x="0" y="7.62" visible="pad" length="middle" rot="R270"/>
 <pin name="P$4" x="0" y="-7.62" visible="pad" length="middle" rot="R90"/>
+</symbol>
+<symbol name="ADC">
+<wire x1="-15.24" y1="10.16" x2="-15.24" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="-15.24" y1="-10.16" x2="12.7" y2="-10.16" width="0.254" layer="94"/>
+<wire x1="12.7" y1="-10.16" x2="12.7" y2="10.16" width="0.254" layer="94"/>
+<wire x1="12.7" y1="10.16" x2="-15.24" y2="10.16" width="0.254" layer="94"/>
+<pin name="ALRT" x="0" y="15.24" length="middle" rot="R270"/>
+<pin name="VDD" x="-20.32" y="7.62" length="middle"/>
+<pin name="GND" x="-20.32" y="2.54" length="middle"/>
+<pin name="SCL" x="17.78" y="7.62" length="middle" rot="R180"/>
+<pin name="SDA" x="17.78" y="2.54" length="middle" rot="R180"/>
+<pin name="A0" x="-12.7" y="-15.24" length="middle" rot="R90"/>
+<pin name="A1" x="-7.62" y="-15.24" length="middle" rot="R90"/>
+<pin name="A2" x="-2.54" y="-15.24" length="middle" rot="R90"/>
+<pin name="A3" x="2.54" y="-15.24" length="middle" rot="R90"/>
+<pin name="ADDR" x="-5.08" y="15.24" length="middle" rot="R270"/>
 </symbol>
 </symbols>
 <devicesets>
@@ -1011,6 +1047,30 @@
 <connects>
 <connect gate="G$1" pin="P$3" pad="P$1"/>
 <connect gate="G$1" pin="P$4" pad="P$2"/>
+</connects>
+<technologies>
+<technology name=""/>
+</technologies>
+</device>
+</devices>
+</deviceset>
+<deviceset name="ADC">
+<gates>
+<gate name="G$1" symbol="ADC" x="0" y="0"/>
+</gates>
+<devices>
+<device name="" package="ADC">
+<connects>
+<connect gate="G$1" pin="A0" pad="A0"/>
+<connect gate="G$1" pin="A1" pad="A1"/>
+<connect gate="G$1" pin="A2" pad="A2"/>
+<connect gate="G$1" pin="A3" pad="A3"/>
+<connect gate="G$1" pin="ADDR" pad="ADDR"/>
+<connect gate="G$1" pin="ALRT" pad="ALRT"/>
+<connect gate="G$1" pin="GND" pad="GND"/>
+<connect gate="G$1" pin="SCL" pad="SCL"/>
+<connect gate="G$1" pin="SDA" pad="SDA"/>
+<connect gate="G$1" pin="VDD" pad="VDD"/>
 </connects>
 <technologies>
 <technology name=""/>
