@@ -215,7 +215,7 @@ def Main():
             if event.type == MOUSEMOTION:
                 mousex, mousey = event.pos
             if event.type == KEYDOWN:
-                if event.key == K_ESCAPE:
+                if event.key == K_ESCAPE or event.key == K_7:
                     runProgram = 0
                     tclass.error = 1
                     os.system("sudo shutdown now")
@@ -232,7 +232,7 @@ def Main():
                     WindowSurface.blit(Gfont.render("for the students of",1,(255,255,255)),(1295,740))# Reynolds
                     WindowSurface.blit(Gfont.render("Vermont Technical",1,(255,255,255)),(1290,840))# Reynolds
                     WindowSurface.blit(Gfont.render("College",1,(255,255,255)),(1445,900))# Reynolds
-                if event.key == K_SPACE:
+                if event.key == K_e or event.key == K_SPACE:
                     lines = []
                     loadOver = 0
                     Load = [0,50000]
