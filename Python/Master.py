@@ -153,7 +153,7 @@ def Main():
     ################ Pygame Init
     pygame.init()
     fpsclock = pygame.time.Clock()
-    WindowSurface = pygame.display.set_mode((1918,1078),pygame.FULLSCREEN)
+    WindowSurface = pygame.display.set_mode((1918,1078))#,pygame.FULLSCREEN)
     pygame.display.set_caption("Pygame Test")
     pygame.mouse.set_visible(0)
     fps = 0
@@ -242,10 +242,14 @@ def Main():
                                 try:
                                     config = open(wd+"/Gordonator.txt",'r')
                                     PullNum = int(config.read())
+                                    config.close()
                                 except:
-                                    config = open(wd+"/Gordonator.txt",'w')
-                                    config.write(0)
-                                
+                                    pass
+                                pygame.image.pygame.image.save(WindowSurface,wd+"/Pull "+str(PullNum)+".jpg")
+                        PullNum += 1
+                        config = open(wd+"/Gordonator.txt",'w')
+                        config.write(PullNum)
+                        config.close()
                     except IOError:
                         print "Saving to flash drive failed"
                     lines = []
@@ -259,7 +263,6 @@ def Main():
                     time.sleep(.1)
                     pygame.draw.rect(WindowSurface,(0,0,0),(0,420,1230,700)) # Draw Black
                     tclass.pressureArray = [] # clear saved pressures
-                    PullNum += 1
         while len(tclass.pressureArray) > 11:
             readings = 0
             pressures = 0
