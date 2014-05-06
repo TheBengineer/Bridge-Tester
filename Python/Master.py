@@ -153,7 +153,7 @@ def Main():
     ################ Pygame Init
     pygame.init()
     fpsclock = pygame.time.Clock()
-    WindowSurface = pygame.display.set_mode((1918,1078))#,pygame.FULLSCREEN)
+    WindowSurface = pygame.display.set_mode((1918,1078),pygame.FULLSCREEN)
     pygame.display.set_caption("Pygame Test")
     pygame.mouse.set_visible(0)
     fps = 0
@@ -263,6 +263,8 @@ def Main():
                                     config = open(wd+"/Gordonator.txt",'w')
                                     config.write(str(PullNum))
                                     config.close()
+                                else:
+                                    print "No flash Drive detected. Saving failed"
                         except:
                             print "Saving to flash drive failed"
                     lines = []
