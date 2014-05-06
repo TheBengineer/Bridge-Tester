@@ -216,6 +216,20 @@ def Main():
             if event.type == MOUSEMOTION:
                 mousex, mousey = event.pos
             if event.type == KEYDOWN:
+                if event.scancode == 123:
+                    displacementLimit += .1
+                    pygame.draw.rect(WindowSurface,(0,0,0),(160,480,820,110)) # Draw Black
+                    draw_rect(WindowSurface,(170,490,800,90),(0,100,250),25,3) # max load
+                    WindowSurface.blit(Gfont.render("Max Deflection: {0:.3f}\"".format(displacementLimit),1,(255,200,0)),(200,500))# Saving
+                    pygame.display.update()
+                    time.sleep(.2)
+                if event.scancode == 122:
+                    displacementLimit -= .1
+                    pygame.draw.rect(WindowSurface,(0,0,0),(160,480,820,110)) # Draw Black
+                    draw_rect(WindowSurface,(170,490,800,90),(0,100,250),25,3) # max load
+                    WindowSurface.blit(Gfont.render("Max Deflection: {0:.3f}\"".format(displacementLimit),1,(255,200,0)),(200,500))# Saving
+                    pygame.display.update()
+                    time.sleep(.2)
                 if event.key == K_ESCAPE or event.key == K_7:
                     runProgram = 0
                     tclass.error = 1
@@ -404,8 +418,6 @@ tclass.start() ## start class running
 
 
 Main()
-
-
 
 
 
