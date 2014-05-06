@@ -204,6 +204,7 @@ def Main():
     td = 0.0
     time.sleep(.1)
     tclass.pressureArray = [] # clear saved pressures
+    PullNum = 0
     
     while runProgram:
         #WindowSurface.fill(pygame.Color(0,0,0)) # Screen Redraw
@@ -233,6 +234,20 @@ def Main():
                     WindowSurface.blit(Gfont.render("Vermont Technical",1,(255,255,255)),(1290,840))# Reynolds
                     WindowSurface.blit(Gfont.render("College",1,(255,255,255)),(1445,900))# Reynolds
                 if event.key == K_e or event.key == K_SPACE:
+                    try:
+                        for directories in os.listdir("/media/"): 
+                            if directories != "SETTINGS SD" and directories != "SETTINGS" and directories != "BOOT":
+                                wd = "/media/" + directories
+                                print "Saving Pull data to ", wd
+                                try:
+                                    config = open(wd+"/Gordonator.txt",'r')
+                                    PullNum = int(config.read())
+                                except:
+                                    config = open(wd+"/Gordonator.txt",'w')
+                                    config.write(0)
+                                
+                    except IOError:
+                        print "Saving to flash drive failed"
                     lines = []
                     loadOver = 0
                     Load = [0,50000]
@@ -244,6 +259,7 @@ def Main():
                     time.sleep(.1)
                     pygame.draw.rect(WindowSurface,(0,0,0),(0,420,1230,700)) # Draw Black
                     tclass.pressureArray = [] # clear saved pressures
+                    PullNum += 1
         while len(tclass.pressureArray) > 11:
             readings = 0
             pressures = 0
