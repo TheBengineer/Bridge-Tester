@@ -245,10 +245,17 @@ def Main():
                                     config.close()
                                 except:
                                     pass
-                                pygame.image.pygame.image.save(WindowSurface,wd+"/Pull "+str(PullNum)+".jpg")
+                                fn = wd+"/Crush "+str(PullNum)
+                                print "under files:",fn+".jpg , ",fn+".csv"
+                                pygame.image.save(WindowSurface,fn+".jpg")
+                                csv = open(fn+".csv",'w')
+                                csv.write("Gordonator crush data for crush #"+str(PullNum)+"\n")
+                                csv.write("Load,Deflection\n")
+                                for dp in lines:
+                                    csv.write(str(dp[0])+","+str(dp[1])+"\n")
                         PullNum += 1
                         config = open(wd+"/Gordonator.txt",'w')
-                        config.write(PullNum)
+                        config.write(str(PullNum))
                         config.close()
                     except IOError:
                         print "Saving to flash drive failed"
@@ -312,11 +319,13 @@ def Main():
             pygame.draw.lines(WindowSurface,(0,100,255),0,((35, 420), (1165, 420), (1190, 445), (1190, 1020), (1165, 1046), (35, 1046), (10, 1020), (10, 445), (35, 420)),3)
             scaled = []
             ################ Compute Scale
-            for j in range(len(lines)):
+            j = 0
+            while j < len(lines):
                 if lines[j][1] > maxVal:
                     maxVal = lines[j][1]
                     maxInd = j
                 scaled.append((10+((lines[j][0]-Dist[1])*xscale2),1020+((lines[j][1]-Load[1])*yscale)))
+                j += 1
             pygame.draw.lines(WindowSurface,(255,255,255),0,scaled,1)
             px,py = (10+((lines[maxInd][0]-Dist[1])*xscale2),1020+((lines[maxInd][1]-Load[1])*yscale))
             if px > 600: #"{0:.2f} LB","{0:.3f}\""
