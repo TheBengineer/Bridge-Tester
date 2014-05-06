@@ -234,31 +234,37 @@ def Main():
                     WindowSurface.blit(Gfont.render("Vermont Technical",1,(255,255,255)),(1290,840))# Reynolds
                     WindowSurface.blit(Gfont.render("College",1,(255,255,255)),(1445,900))# Reynolds
                 if event.key == K_e or event.key == K_SPACE:
-                    try:
-                        for directories in os.listdir("/media/"): 
-                            if directories != "SETTINGS SD" and directories != "SETTINGS" and directories != "BOOT":
-                                wd = "/media/" + directories
-                                print "Saving Pull data to ", wd
-                                try:
-                                    config = open(wd+"/Gordonator.txt",'r')
-                                    PullNum = int(config.read())
-                                    config.close()
-                                except:
-                                    pass
-                                fn = wd+"/Crush "+str(PullNum)
-                                print "under files:",fn+".jpg , ",fn+".csv"
-                                pygame.image.save(WindowSurface,fn+".jpg")
-                                csv = open(fn+".csv",'w')
-                                csv.write("Gordonator crush data for crush #"+str(PullNum)+"\n")
-                                csv.write("Load,Deflection\n")
-                                for dp in lines:
-                                    csv.write(str(dp[0])+","+str(dp[1])+"\n")
-                        PullNum += 1
-                        config = open(wd+"/Gordonator.txt",'w')
-                        config.write(str(PullNum))
-                        config.close()
-                    except IOError:
-                        print "Saving to flash drive failed"
+                    if Load[0] > 30:
+                        sbak = WindowSurface.copy()
+                        draw_rect(WindowSurface,(170,490,400,90),(0,100,250),25,3) # max load
+                        WindowSurface.blit(Gfont.render("Saving Data",1,(255,255,255)),(200,500))# Saving
+                        pygame.display.update()
+                        try:
+                            for directories in os.listdir("/media/"): 
+                                if directories != "SETTINGS SD" and directories != "SETTINGS" and directories != "BOOT":
+                                    wd = "/media/" + directories
+                                    print "Saving Pull data to ", wd
+                                    try:
+                                        config = open(wd+"/Gordonator.txt",'r')
+                                        PullNum = int(config.read())
+                                        config.close()
+                                    except:
+                                        pass
+                                    fn = wd+"/Crush "+str(PullNum)
+                                    print "under files:",fn+".jpg , ",fn+".csv"
+                                    pygame.image.save(sbak,fn+".jpg")
+                                    csv = open(fn+".csv",'w')
+                                    csv.write("Gordonator crush data for crush #"+str(PullNum)+"\n")
+                                    csv.write("Deflection,Load\n")
+                                    for dp in lines:
+                                        csv.write(str(dp[0])+","+str(dp[1])+"\n")
+                                    csv.close()
+                            PullNum += 1
+                            config = open(wd+"/Gordonator.txt",'w')
+                            config.write(str(PullNum))
+                            config.close()
+                        except IOError:
+                            print "Saving to flash drive failed"
                     lines = []
                     loadOver = 0
                     Load = [0,50000]
