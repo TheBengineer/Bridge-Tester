@@ -1,6 +1,10 @@
 Bridge-Tester
 =============
 
+![Project Image](Header.jpg?raw=true "Project Picture")
+
+
+
 An Open Source bridge tester for popsicle stick bridge competitions.
 
 Here is the website hosted at our college:
