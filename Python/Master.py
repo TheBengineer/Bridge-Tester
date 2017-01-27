@@ -124,17 +124,14 @@ class IOThread(Thread):
         reading_raw = msg[0:msg.find("P")]
         try:
             pressure = float(reading_raw)
+            pressure -= self.PTare
         except ValueError:
             pressure = None
 
-        pressure -= self.PTare
 
         if pressure is not None:
             self.pressureArray.append([pressure, self.lastDistance])  # time.time is far away from reading, but should be ok
         return pressure
-
-    def __sizeof__(self):
-        return super(IOThread, self).__sizeof__()
 
     def pollpress2(self):
         readingraw = convertReading(self.bus.read_word_data(self.pressureAddress, 0x00))
