@@ -12,9 +12,11 @@ from threading import Thread  ## import
 from  technical import *
 
 pi = 0  # 1 = running on pi, 0 = running in test mode
-if os.path.exists("/dev/i2c-0"):  # Am I runnin on a pi?
-    pi = 1
+try:  # Am I runnin on a pi?
     import smbus
+    pi = 1
+except:
+    print "Could not import smbus."
 
 if pi == 1:
     print "[INFO] Detected I2C. Running normally"
