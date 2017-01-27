@@ -125,6 +125,7 @@ class IOThread(Thread):
         try:
             pressure = float(reading_raw)
             pressure -= self.PTare
+            print pressure
         except ValueError:
             pressure = None
 
@@ -501,7 +502,6 @@ def Main():
 
         pygame.draw.lines(WindowSurface, (0, 100, 255), 0, ((1230, 1045), (1205, 1020), (1205, 445), (1230, 420)), 3)  # Fix overwrite
 
-        print "sadfsadf"
 
         pygame.display.update()
     # f.close()
