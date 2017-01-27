@@ -5,10 +5,12 @@ import os
 import pygame
 import random
 import time
+import serial
 from pygame.locals import *
 from threading import Thread  # import
 
 from technical import *
+
 
 pi = 0  # 1 = running on pi, 0 = running in test mode
 if os.path.exists("/dev/i2c-0"):  # Am I running on a pi?
@@ -19,6 +21,16 @@ if pi == 1:
     print "[INFO] Detected I2C. Running normally"
 else:
     print "[INFO] Did not detect I2C. Running in simulation mode"
+
+
+def log(*args):
+    print "[Main]",
+    # print time.strftime("%c"),
+    # print " ",
+    for arg in args:
+        print arg,
+    print ""
+
 
 
 class fakeIIC():
@@ -62,7 +74,58 @@ class IOThread(Thread):
         # LEDS don't need setup
         return bus
 
+    @staticmethod
+    def find_all_USBs():
+        """
+        This function finds all connected USB sensors
+        :return: Returns a list of strings, EG: 'ttyUSB0'
+        """
+        return [dev for dev in os.listdir("/dev/") if dev.startswith("ttyUSB")]
+
+    def connect_USBs(self):
+        """
+        Opens a serial stream to the sensors, and tries to determine which is which.
+        Streams are stored to local variables
+        """
+        all_devs = self.find_all_USBs()  # Get all USB devices to scan
+        # Make sure there are 2 connected
+        if len(all_devs) == 0:
+            log("[ERROR] There are no detected sensors")
+            raise IOError
+        elif len(all_devs) == 1:
+            log("[ OK ] One sensor connected at '/dev/{}'.".format(all_devs[0]))
+            raise IOError
+        elif len(all_devs) > 2:
+            log("[WARNING] More than one sensor detected. Will try to determine which sensors to use.\n\tSensors:{}".format(all_devs))
+
+        # Check all devices to figure out which is force, and which is displacement.
+        for dev in all_devs:
+            baud = 115200
+            self.force_serial = serial.Serial(port='/dev/' + dev, baudrate=baud)
+            if not self.force_serial.isOpen():
+                self.force_serial.open()
+            self.force_serial.write("RATE 8\n\r")
+
     def pollpress(self):
+        self.force_serial.write("P\n\r")
+        self.force_serial.flush()
+        time.sleep(.01)
+        msg = ""
+        while self.force_serial.inWaiting():
+            msg += self.force_serial.read(1)
+        reading_raw = msg[0:msg.find("P")]
+        try:
+            pressure = float(reading_raw)
+        except ValueError:
+            pressure = None
+
+        pressure -= self.PTare
+
+        if pressure is not None:
+            self.pressureArray.append([pressure, self.lastDistance, time.time()])  # time.time is far away from reading, but should be ok
+        return pressure
+
+    def pollpress2(self):
         readingraw = convertReading(self.bus.read_word_data(self.pressureAddress, 0x00))
         # if readingraw > 1000:
         # if self.pga == 2:
