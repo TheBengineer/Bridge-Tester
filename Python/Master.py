@@ -165,6 +165,7 @@ class IOThread(Thread):
                 self.lastDistance = self.getdist()
             self.polls += 1
             time.sleep(.001)
+            print "sadfsadf"
 
 
 def Draw_Chart(surface, x, y, hsize, vsize, dataset, (DataStart, DataEnd), (DXMin, DXMax), (DYMin, DYMax), color, stroke, bordercolor, border, stringFormat,
