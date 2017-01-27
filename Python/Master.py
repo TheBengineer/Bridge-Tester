@@ -97,7 +97,6 @@ class IOThread(Thread):
             raise IOError
         elif len(all_devs) == 1:
             log("[ OK ] One sensor connected at '/dev/{}'.".format(all_devs[0]))
-            raise IOError
         elif len(all_devs) > 2:
             log("[WARNING] More than one sensor detected. Will try to determine which sensors to use.\n\tSensors:{}".format(all_devs))
 
