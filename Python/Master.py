@@ -162,7 +162,6 @@ class IOThread(Thread):
                 self.lastDistance = self.getdist()
             self.polls += 1
             time.sleep(.001)
-            print "sadfsadf"
 
 
 def Draw_Chart(surface, x, y, hsize, vsize, dataset, (DataStart, DataEnd), (DXMin, DXMax), (DYMin, DYMax), color, stroke, bordercolor, border, stringFormat,
@@ -501,6 +500,8 @@ def Main():
         WindowSurface.blit(forceFont.render("{0:>7.2f}\"".format(td), 1, (255, 0, 0)), (1175, 210))  # Displacement
 
         pygame.draw.lines(WindowSurface, (0, 100, 255), 0, ((1230, 1045), (1205, 1020), (1205, 445), (1230, 420)), 3)  # Fix overwrite
+
+        print "sadfsadf"
 
         pygame.display.update()
     # f.close()
