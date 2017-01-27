@@ -151,7 +151,10 @@ class IOThread(Thread):
         self.polls = 0
         self.lastDistance = self.getdist()
         while self.error == 0:  ## Main thread program using passed variable
-            self.lastPressure = self.pollpress()
+            reading = self.pollpress()
+            if reading is not None:
+                self.lastPressure = reading
+
             if self.polls % 10 == 0:
                 self.lastDistance = self.getdist()
             self.polls += 1
