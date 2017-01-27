@@ -116,8 +116,11 @@ class IOThread(Thread):
         self.force_serial.flush()
         time.sleep(.01)
         msg = ""
-        while self.force_serial.inWaiting():
+
+        lk = 0
+        while self.force_serial.inWaiting() and lk <10:
             msg += self.force_serial.read(1)
+            lk += 1
         reading_raw = msg[0:msg.find("P")]
         try:
             pressure = float(reading_raw)
@@ -129,6 +132,9 @@ class IOThread(Thread):
         if pressure is not None:
             self.pressureArray.append([pressure, self.lastDistance])  # time.time is far away from reading, but should be ok
         return pressure
+
+    def __sizeof__(self):
+        return super(IOThread, self).__sizeof__()
 
     def pollpress2(self):
         readingraw = convertReading(self.bus.read_word_data(self.pressureAddress, 0x00))
